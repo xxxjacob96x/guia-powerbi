@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Power BI de cero — Guía de terreno</title>
+<style>
+:root{
+  --papel:#F7F8FA;
+  --tinta:#14181F;
+  --azul:#0A2A5E;
+  --azul-claro:#1B5E9E;
+  --amarillo:#F0B323;
+  --acero:#6B7684;
+  --linea:#DCE3EC;
+  --ok:#1B7F5A;
+  --error:#C0392B;
+  --code-bg:#151A22;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--papel); color:var(--tinta);
+  font-family:"Segoe UI",Calibri,system-ui,sans-serif;
+  font-size:16.5px; line-height:1.65;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 24px 120px}
+
+/* Portada */
+.portada{
+  background:var(--azul); color:#fff; margin-bottom:0;
+  padding:64px 24px 56px;
+}
+.portada .inner{max-width:860px;margin:0 auto}
+.eyebrow{
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--amarillo);font-weight:700;margin:0 0 14px
+}
+.portada h1{
+  font-family:Cambria,Georgia,serif;
+  font-size:46px;line-height:1.1;margin:0 0 14px;font-weight:700
+}
+.portada p{margin:0;color:#B9CBE4;font-size:17px;max-width:56ch}
+.portada .meta{
+  margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.2);
+  font-size:13.5px;color:#8FA9CC
+}
+
+/* Secciones */
+h2{
+  font-family:Cambria,Georgia,serif;
+  font-size:30px;margin:64px 0 6px;line-height:1.2;
+  scroll-margin-top:20px;
+}
+h2 .num{
+  display:block;font-family:"Segoe UI",sans-serif;font-size:12px;
+  letter-spacing:.16em;color:var(--azul-claro);font-weight:700;
+  text-transform:uppercase;margin-bottom:6px
+}
+h3{font-size:20px;margin:38px 0 8px;font-family:Cambria,Georgia,serif}
+h4{font-size:16px;margin:26px 0 6px;color:var(--azul)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:6px}
+a{color:var(--azul-claro)}
+
+/* Índice */
+.toc{
+  background:#fff;border:1px solid var(--linea);border-radius:6px;
+  padding:26px 30px;margin:36px 0 10px
+}
+.toc h3{margin:0 0 14px;font-size:15px;letter-spacing:.1em;
+  text-transform:uppercase;font-family:"Segoe UI",sans-serif;color:var(--acero)}
+.toc ol{list-style:none;padding:0;margin:0;counter-reset:t}
+.toc li{counter-increment:t;margin:0;border-bottom:1px solid var(--linea)}
+.toc li:last-child{border-bottom:none}
+.toc a{
+  display:flex;gap:14px;padding:9px 0;text-decoration:none;color:var(--tinta)
+}
+.toc a:hover{color:var(--azul-claro)}
+.toc a::before{
+  content:counter(t,decimal-leading-zero);
+  color:var(--azul-claro);font-weight:700;font-size:13px;
+  font-variant-numeric:tabular-nums;padding-top:3px;
+  margin-right:14px;min-width:22px;display:inline-block
+}
+
+/* Código */
+pre{
+  background:var(--code-bg);color:#E6EDF3;border-radius:6px;
+  padding:16px 18px;overflow-x:auto;font-size:13.5px;line-height:1.55;
+  margin:0 0 16px;font-family:Consolas,"Courier New",monospace
+}
+pre .c{color:#7D8799}          /* comentario */
+pre .k{color:#F0B323}          /* palabra clave */
+pre .s{color:#7EE787}          /* string */
+pre .f{color:#79C0FF}          /* función */
+code{
+  background:#E7ECF3;padding:1.5px 5px;border-radius:3px;
+  font-family:Consolas,"Courier New",monospace;font-size:.88em
+}
+pre code{background:none;padding:0;font-size:inherit}
+
+/* Cajas */
+.caja{
+  border-left:3px solid var(--azul-claro);background:#fff;
+  padding:16px 20px;margin:0 0 18px;border-radius:0 5px 5px 0;
+  border-top:1px solid var(--linea);border-right:1px solid var(--linea);
+  border-bottom:1px solid var(--linea)
+}
+.caja .tag{
+  display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:700;color:var(--azul-claro);margin-bottom:6px
+}
+.caja p:last-child{margin-bottom:0}
+.caja.err{border-left-color:var(--error)}
+.caja.err .tag{color:var(--error)}
+.caja.ok{border-left-color:var(--ok)}
+.caja.ok .tag{color:var(--ok)}
+.caja.regla{border-left-color:var(--amarillo);background:#FFFBF0}
+.caja.regla .tag{color:#A87708}
+
+/* Tablas */
+table{
+  width:100%;border-collapse:collapse;margin:0 0 20px;
+  font-size:14.5px;background:#fff
+}
+th{
+  background:var(--azul);color:#fff;text-align:left;padding:9px 12px;
+  font-weight:600;font-size:13px;letter-spacing:.03em
+}
+td{padding:9px 12px;border-bottom:1px solid var(--linea);vertical-align:top}
+tr:last-child td{border-bottom:none}
+table code{font-size:.85em}
+
+/* Figuras */
+figure{margin:26px 0;text-align:center}
+figure svg{max-width:100%;height:auto}
+figcaption{
+  font-size:13px;color:var(--acero);margin-top:10px;text-align:left;
+  border-top:1px solid var(--linea);padding-top:8px
+}
+figcaption b{color:var(--tinta)}
+
+/* Pasos numerados */
+.pasos{counter-reset:p;list-style:none;padding:0}
+.pasos li{
+  counter-increment:p;position:relative;padding-left:42px;margin-bottom:14px
+}
+.pasos li::before{
+  content:counter(p);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border-radius:50%;background:var(--azul);
+  color:#fff;font-size:13px;font-weight:700;display:flex;
+  align-items:center;justify-content:center
+}
+hr{border:none;border-top:1px solid var(--linea);margin:44px 0}
+.pie{
+  margin-top:70px;padding-top:20px;border-top:2px solid var(--azul);
+  font-size:13px;color:var(--acero)
+}
+@media print{
+  .portada{padding:40px 0}
+  h2{page-break-after:avoid;page-break-before:always}
+  h2#c1{page-break-before:avoid}
+  h3,h4{page-break-after:avoid}
+  pre,figure,table,.caja,.pasos li{page-break-inside:avoid}
+  hr{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="portada">
+  <div class="inner">
+    <p class="eyebrow">Guía de terreno · Jacob Chaparro</p>
+    <h1>Power BI de cero,<br>sin dar nada por supuesto</h1>
+    <p>Todo lo que trabajamos resolviendo la prueba de desmontaje y reparación de
+       componentes: cargar datos sucios, limpiarlos en M, armar el modelo, escribir
+       DAX y construir el tablero. Más lo que no alcanzamos a ver.</p>
+    <p class="meta">Construida sobre el caso real: TAT_LOGISTICO · Costos · Países · Fábrica</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="toc">
+  <h3>Contenido</h3>
+  <ol>
+    <li><a href="#c1">El mapa: las tres capas de Power BI</a></li>
+    <li><a href="#c2">Cargar datos sin que se rompan</a></li>
+    <li><a href="#c3">Power Query y el lenguaje M</a></li>
+    <li><a href="#c4">El modelo de datos</a></li>
+    <li><a href="#c5">DAX: los dos conceptos que lo explican todo</a></li>
+    <li><a href="#c6">DAX: catálogo de funciones</a></li>
+    <li><a href="#c7">Visuales y cómo elegirlos</a></li>
+    <li><a href="#c8">Diseño del tablero</a></li>
+    <li><a href="#c9">Bitácora de errores reales</a></li>
+    <li><a href="#c10">Lo que no vimos y deberías saber</a></li>
+    <li><a href="#c11">Glosario de planificación y mantenimiento</a></li>
+    <li><a href="#c12">Checklist para una prueba técnica</a></li>
+  </ol>
+</div>
+
+<p style="font-size:14.5px;color:var(--acero)">
+Esta guía se lee en orden la primera vez y por índice después. Cada regla que
+aparece en recuadro amarillo es de las que se aplican sin pensar: memorízalas y
+te ahorras la mitad de los errores.</p>
+
+<hr>
+
+<!-- ============ 1 ============ -->
+<h2 id="c1"><span class="num">Capítulo uno</span>El mapa: las tres capas de Power BI</h2>
+
+<p>Antes de tocar un botón conviene entender que Power BI no es un programa, son
+tres programas apilados. Cada uno tiene su lenguaje y su momento. La mayoría de
+las confusiones vienen de intentar hacer algo en la capa equivocada.</p>
+
+<figure>
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,sans-serif">
+  <rect x="10" y="30" width="200" height="230" rx="6" fill="#fff" stroke="#DCE3EC"/>
+  <rect x="10" y="30" width="200" height="42" rx="6" fill="#0A2A5E"/>
+  <rect x="10" y="60" width="200" height="12" fill="#0A2A5E"/>
+  <text x="110" y="57" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">1. Power Query</text>
+  <text x="110" y="94" fill="#6B7684" font-size="11" text-anchor="middle" letter-spacing="1.5">LENGUAJE M</text>
+  <text x="30" y="124" font-size="13" fill="#14181F">Traer los archivos</text>
+  <text x="30" y="148" font-size="13" fill="#14181F">Quitar filas basura</text>
+  <text x="30" y="172" font-size="13" fill="#14181F">Corregir tipos</text>
+  <text x="30" y="196" font-size="13" fill="#14181F">Limpiar texto</text>
+  <text x="30" y="220" font-size="13" fill="#14181F">Columnas nuevas</text>
+  <text x="30" y="246" font-size="12" fill="#6B7684" font-style="italic">Se ejecuta al actualizar</text>
+
+  <rect x="250" y="30" width="200" height="230" rx="6" fill="#fff" stroke="#DCE3EC"/>
+  <rect x="250" y="30" width="200" height="42" rx="6" fill="#1B5E9E"/>
+  <rect x="250" y="60" width="200" height="12" fill="#1B5E9E"/>
+  <text x="350" y="57" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">2. Modelo</text>
+  <text x="350" y="94" fill="#6B7684" font-size="11" text-anchor="middle" letter-spacing="1.5">RELACIONES</text>
+  <text x="270" y="124" font-size="13" fill="#14181F">Unir tablas</text>
+  <text x="270" y="148" font-size="13" fill="#14181F">Definir el lado 1</text>
+  <text x="270" y="172" font-size="13" fill="#14181F">Definir el lado ∗</text>
+  <text x="270" y="196" font-size="13" fill="#14181F">Dirección del filtro</text>
+  <text x="270" y="246" font-size="12" fill="#6B7684" font-style="italic">Se define una vez</text>
+
+  <rect x="490" y="30" width="200" height="230" rx="6" fill="#fff" stroke="#DCE3EC"/>
+  <rect x="490" y="30" width="200" height="42" rx="6" fill="#F0B323"/>
+  <rect x="490" y="60" width="200" height="12" fill="#F0B323"/>
+  <text x="590" y="57" fill="#14181F" font-size="15" font-weight="700" text-anchor="middle">3. Informe</text>
+  <text x="590" y="94" fill="#6B7684" font-size="11" text-anchor="middle" letter-spacing="1.5">LENGUAJE DAX</text>
+  <text x="510" y="124" font-size="13" fill="#14181F">Medidas</text>
+  <text x="510" y="148" font-size="13" fill="#14181F">Columnas calculadas</text>
+  <text x="510" y="172" font-size="13" fill="#14181F">Gráficos y tablas</text>
+  <text x="510" y="196" font-size="13" fill="#14181F">Filtros</text>
+  <text x="510" y="246" font-size="12" fill="#6B7684" font-style="italic">Se recalcula al filtrar</text>
+
+  <path d="M215 145 L245 145" stroke="#6B7684" stroke-width="2" marker-end="url(#fl)"/>
+  <path d="M455 145 L485 145" stroke="#6B7684" stroke-width="2" marker-end="url(#fl)"/>
+  <defs><marker id="fl" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#6B7684"/></marker></defs>
+  <text x="350" y="18" font-size="12" fill="#6B7684" text-anchor="middle" letter-spacing="1.2">EL DATO FLUYE EN UNA SOLA DIRECCIÓN</text>
+</svg>
+<figcaption><b>Las tres capas.</b> Lo que arreglas en la capa 1 llega limpio a las
+otras dos. Lo que arreglas en la capa 3 no cambia el dato de origen. Por eso la
+regla es: limpia lo más a la izquierda posible.</figcaption>
+</figure>
+
+<div class="caja regla">
+  <span class="tag">Regla</span>
+  <p>Si el problema es de <b>datos</b> (texto sucio, tipo equivocado, filas de más),
+  se arregla en Power Query. Si el problema es de <b>cálculo</b> (un total, un
+  promedio, un porcentaje), se resuelve con DAX. Si el problema es de
+  <b>presentación</b> (colores, orden, tamaño), es del visual.</p>
+</div>
+
+<h3>Cuándo usar cada una</h3>
+
+<table>
+<tr><th style="width:38%">Necesito…</th><th style="width:24%">Capa</th><th>Cómo</th></tr>
+<tr><td>Quitar 5 filas de encabezado basura</td><td>Power Query</td><td>Quitar filas superiores</td></tr>
+<tr><td>Que "eq-0092" y "EQ-0092" sean lo mismo</td><td>Power Query</td><td><code>Text.Upper</code></td></tr>
+<tr><td>Días entre dos fechas, fila por fila</td><td>Power Query o DAX</td><td>Columna</td></tr>
+<tr><td>El promedio de esos días</td><td>DAX</td><td>Medida</td></tr>
+<tr><td>Que el promedio cambie al filtrar por año</td><td>DAX</td><td>Medida (es automático)</td></tr>
+<tr><td>Que los meses salgan en orden</td><td>Informe</td><td>Ordenar por columna</td></tr>
+<tr><td>Barras rojas si el TAT supera 15 días</td><td>Informe</td><td>Formato condicional</td></tr>
+</table>
+
+<div class="caja">
+  <span class="tag">Por qué importa</span>
+  <p>Una columna creada en Power Query se guarda físicamente y ocupa espacio en el
+  archivo. Una medida DAX no ocupa nada: se calcula en el momento. En modelos
+  grandes esa diferencia decide si el archivo abre en dos segundos o en dos
+  minutos.</p>
+</div>
+
+<hr>
+
+<!-- ============ 2 ============ -->
+<h2 id="c2"><span class="num">Capítulo dos</span>Cargar datos sin que se rompan</h2>
+
+<p>La carga parece el paso trivial y es donde se pierde más tiempo. Los archivos
+reales vienen con encabezados falsos, separadores raros y valores que no son lo
+que dicen ser.</p>
+
+<h3>CSV separado por punto y coma</h3>
+
+<p>En Chile y buena parte de Latinoamérica el separador de listas es el punto y
+coma, no la coma, porque la coma se usa como separador decimal. Power BI a veces
+lo detecta y a veces no.</p>
+
+<p>Si al cargar un CSV ves <b>todo el contenido en una sola columna</b>, ese es el
+síntoma. Tienes dos salidas:</p>
+
+<ol class="pasos">
+<li>En la ventana de vista previa, antes de aceptar, cambia el desplegable
+<b>Delimitador</b> a <em>Punto y coma</em>.</li>
+<li>Si ya cargaste: en Power Query, selecciona la columna →
+<b>Dividir columna</b> → <b>Por delimitador</b> → Punto y coma → Cada aparición.
+Después <b>Usar la primera fila como encabezado</b>.</li>
+</ol>
+
+<h3>Excel con filas basura arriba</h3>
+
+<p>Los reportes exportados de sistemas suelen traer un título, la fecha, el usuario
+y una fila vacía antes de la tabla de verdad. Power BI toma la primera fila como
+encabezado, así que te quedan columnas llamadas "Column1", "Column2".</p>
+
+<pre><code><span class="c">// En Power Query, en este orden:</span>
+Inicio → Quitar filas → Quitar filas superiores → 5
+Inicio → Usar la primera fila como encabezado</code></pre>
+
+<div class="caja err">
+  <span class="tag">Error clásico</span>
+  <p>Invertir el orden. Si promueves el encabezado primero, promueves la fila
+  basura. Siempre: <b>primero quitar, después promover</b>.</p>
+</div>
+
+<h3>La columna que se llena de errores al tipificar</h3>
+
+<p>Este te pasó con la columna <code>Horas</code>. Contenía 304 valores <code>"S/I"</code>
+(sin información) mezclados con números. Al asignarle tipo numérico, Power Query
+no supo qué hacer con el texto y llenó la columna de <em>Error</em>.</p>
+
+<p>La secuencia correcta:</p>
+
+<ol class="pasos">
+<li>Borra el paso <b>Tipo cambiado</b> que Power Query creó solo. Está en el panel
+Pasos aplicados, a la derecha. La X gris a su izquierda lo elimina.</li>
+<li>Selecciona la columna → <b>Reemplazar los valores</b> → buscar <code>S/I</code>
+→ reemplazar por nada (deja el campo vacío).</li>
+<li>Ahora sí, cambia el tipo a Número decimal.</li>
+</ol>
+
+<div class="caja regla">
+  <span class="tag">Regla</span>
+  <p>Nunca reemplaces un valor faltante por <b>cero</b>. Cero es un número real y
+  entra en los promedios. <code>null</code> significa "no hay dato" y las funciones de
+  agregación lo ignoran. Un promedio con ceros falsos miente hacia abajo.</p>
+</div>
+
+<h3>Verificar antes de seguir</h3>
+
+<p>Power Query tiene tres herramientas de diagnóstico que casi nadie usa. Están en
+la pestaña <b>Vista</b>:</p>
+
+<table>
+<tr><th style="width:32%">Herramienta</th><th>Para qué sirve</th></tr>
+<tr><td>Calidad de columna</td><td>Muestra el % de valores válidos, error y vacíos. Detecta problemas de una mirada.</td></tr>
+<tr><td>Distribución de columna</td><td>Cuenta valores distintos y únicos. Si una columna que debería ser llave tiene menos únicos que filas, hay duplicados.</td></tr>
+<tr><td>Perfil de columna</td><td>Mínimo, máximo, promedio, mediana. Aquí aparecen los valores imposibles.</td></tr>
+</table>
+
+<div class="caja ok">
+  <span class="tag">Hallazgo real</span>
+  <p>En la columna <code>Horas</code> el perfil mostraba promedio 18.044 pero mediana
+  14.722 y máximo 298.884. Un horómetro de 298 mil horas es imposible en un
+  componente de flota minera. Esa diferencia entre media y mediana es la firma de
+  los valores extremos.</p>
+</div>
+
+<hr>
+
+<!-- ============ 3 ============ -->
+<h2 id="c3"><span class="num">Capítulo tres</span>Power Query y el lenguaje M</h2>
+
+<p>M es el lenguaje de la primera capa. No necesitas dominarlo: el 90% de las
+transformaciones se hacen con botones y Power Query escribe el M por ti. Pero
+saber leerlo te permite corregir cuando algo falla.</p>
+
+<h3>La estructura: let / in</h3>
+
+<p>Todo código M tiene la misma forma. Una lista de pasos, y al final el nombre del
+paso que quieres mostrar.</p>
+
+<pre><code><span class="k">let</span>
+    Origen = <span class="f">Excel.Workbook</span>(...),
+    Encabezados = <span class="f">Table.PromoteHeaders</span>(Origen),
+    TipoCambiado = <span class="f">Table.TransformColumnTypes</span>(Encabezados, {...}),
+    Limpio = <span class="f">Table.TransformColumns</span>(TipoCambiado, {...})
+<span class="k">in</span>
+    Limpio</code></pre>
+
+<p>Tres reglas de escritura, y son las que rompen todo cuando se olvidan:</p>
+
+<ul>
+<li>Los pasos se separan con <b>coma</b>.</li>
+<li>El <b>último paso no lleva coma</b>.</li>
+<li>Después de <code>in</code> va <b>solo el nombre</b> de un paso, nada más.</li>
+</ul>
+
+<div class="caja err">
+  <span class="tag">Error que cometiste</span>
+  <p>Escribiste el paso nuevo <em>después</em> del <code>in</code>, y dejaste el
+  <code>in</code> apuntando al paso viejo. El resultado: tu limpieza se ejecutaba pero
+  nunca se veía, porque le estabas pidiendo a Power Query el resultado del paso
+  anterior. Piensa el <code>in</code> como "cuál de todos estos platos sirvo".</p>
+</div>
+
+<p>Si un nombre de paso tiene espacios, se escribe con la sintaxis
+<code>#"Tipo cambiado"</code>. Si no tiene espacios, va limpio: <code>IDLimpio</code>.</p>
+
+<h3>Escribir una columna nueva</h3>
+
+<p><b>Agregar columna → Columna personalizada.</b> Se abre una ventana con el nombre
+y la fórmula. Los nombres de columna van entre corchetes.</p>
+
+<h3>Condicionales</h3>
+
+<pre><code><span class="k">if</span> [INGRESO_TALLER] = <span class="k">null</span> <span class="k">then</span> <span class="k">null</span>
+<span class="k">else</span> <span class="f">Duration.Days</span>([INGRESO_TALLER] - [FECHA_DESMONTAJE])</code></pre>
+
+<p>Cuatro cosas que hay que tener presentes:</p>
+
+<ul>
+<li><code>if</code>, <code>then</code>, <code>else</code>, <code>null</code>, <code>true</code>, <code>false</code>
+van siempre en <b>minúscula</b>. M distingue mayúsculas.</li>
+<li>Las funciones llevan mayúscula exacta: <code>Duration.Days</code>, no <code>duration.days</code>.</li>
+<li>Para preguntar si está vacío: <code>= null</code>. Para lo contrario: <code>&lt;&gt; null</code>.</li>
+<li>Restar dos fechas devuelve una <b>duración</b> ("13.00:00:00"), no un número.
+<code>Duration.Days(...)</code> extrae los días.</li>
+</ul>
+
+<h4>Condiciones encadenadas</h4>
+
+<p>Cuando hay varios tramos, se encadenan con <code>else if</code>. El orden importa:
+va de la condición <b>más exigente a la más suelta</b>, porque M se queda con la
+primera que se cumple.</p>
+
+<pre><code><span class="k">if</span> [Dias] = <span class="k">null</span> <span class="k">then</span> <span class="s">"Sin ingreso"</span>
+<span class="k">else if</span> [Dias] &lt;= 7 <span class="k">then</span> <span class="s">"Rápido"</span>
+<span class="k">else if</span> [Dias] &lt;= 15 <span class="k">then</span> <span class="s">"Normal"</span>
+<span class="k">else</span> <span class="s">"Crítico"</span></code></pre>
+
+<div class="caja err">
+  <span class="tag">Por qué el orden importa</span>
+  <p>Si preguntas primero por <code>&lt;= 15</code>, todo lo que sea 7 o menos también
+  cumple esa condición y nunca llega a la rama "Rápido". Preguntar de lo estrecho
+  a lo ancho es lo que hace que cada caso caiga donde corresponde.</p>
+</div>
+
+<h3>Limpieza de texto</h3>
+
+<p>Este es el bloque que más vas a usar. El problema típico: el mismo valor escrito
+de varias formas impide que los cruces funcionen.</p>
+
+<table>
+<tr><th style="width:34%">Función</th><th>Qué hace</th></tr>
+<tr><td><code>Text.Trim(texto)</code></td><td>Quita espacios al inicio y al final</td></tr>
+<tr><td><code>Text.Upper(texto)</code></td><td>Todo a mayúscula</td></tr>
+<tr><td><code>Text.Lower(texto)</code></td><td>Todo a minúscula</td></tr>
+<tr><td><code>Text.Proper(texto)</code></td><td>Primera Letra De Cada Palabra</td></tr>
+<tr><td><code>Text.Clean(texto)</code></td><td>Quita caracteres de control invisibles</td></tr>
+<tr><td><code>Text.Remove(texto, {"-", " "})</code></td><td>Elimina los caracteres de la lista</td></tr>
+<tr><td><code>Text.Replace(texto, "a", "b")</code></td><td>Reemplaza texto por texto</td></tr>
+<tr><td><code>Text.StartsWith(texto, "ele")</code></td><td>Devuelve verdadero o falso</td></tr>
+<tr><td><code>Text.Length(texto)</code></td><td>Cuántos caracteres tiene</td></tr>
+</table>
+
+<h4>El espacio que no es espacio</h4>
+
+<p>Caso real y de los más frustrantes. Aplicaste <code>Text.Trim</code> y los espacios
+seguían ahí. La comprobación con <code>Text.Length</code> daba 7 donde debía dar 5.</p>
+
+<p>La causa: no eran espacios normales, sino el <b>carácter 160</b>, llamado espacio
+no separable. Se ve idéntico en pantalla pero es otro carácter, y
+<code>Text.Trim</code> solo limpia el espacio común, el carácter 32.</p>
+
+<pre><code><span class="c">// Primero conviertes el 160 en espacio normal, después limpias</span>
+<span class="f">Text.Upper</span>(<span class="f">Text.Trim</span>(<span class="f">Text.Replace</span>([Codigo], <span class="f">Character.FromNumber</span>(160), <span class="s">" "</span>)))</code></pre>
+
+<p>De dónde viene: datos copiados desde páginas web, PDF, o exportados por sistemas
+antiguos. En Excel la fórmula equivalente es
+<code>SUSTITUIR(A1;CARACTER(160);" ")</code>.</p>
+
+<div class="caja regla">
+  <span class="tag">Fórmula blindada</span>
+  <p>Cuando la limpieza no funcione y no sepas por qué, usa esta que cubre los tres
+  casos: <code>Text.Upper(Text.Trim(Text.Clean(Text.Replace(col, Character.FromNumber(160), " "))))</code></p>
+</div>
+
+<h4>Agrupar variantes con una regla</h4>
+
+<p>Cuando el mismo valor está escrito de quince formas distintas —"Electonica",
+"Electr0nica", "ELEctronica", "Electronika"— corregir uno por uno es inviable.
+Se define una regla que las capture a todas.</p>
+
+<pre><code><span class="k">if</span> <span class="f">Text.StartsWith</span>(<span class="f">Text.Lower</span>(<span class="f">Text.Trim</span>([Categoría])), <span class="s">"ele"</span>) <span class="k">then</span> <span class="s">"Electrónica"</span>
+<span class="k">else if</span> <span class="f">Text.StartsWith</span>(<span class="f">Text.Lower</span>(<span class="f">Text.Trim</span>([Categoría])), <span class="s">"h"</span>) <span class="k">then</span> <span class="s">"Hogar"</span>
+<span class="k">else if</span> <span class="f">Text.StartsWith</span>(<span class="f">Text.Lower</span>(<span class="f">Text.Trim</span>([Categoría])), <span class="s">"s"</span>) <span class="k">then</span> <span class="s">"Servicio"</span>
+<span class="k">else</span> <span class="s">"REVISAR"</span></code></pre>
+
+<div class="caja ok">
+  <span class="tag">El detalle que vale</span>
+  <p>Terminar con <code>"REVISAR"</code> en vez de dejar pasar el valor original. Así,
+  cualquier caso que no calzó con las reglas te salta a la vista en el filtro de la
+  columna, en vez de camuflarse entre los valores buenos.</p>
+</div>
+
+<h3>Fechas y duraciones en M</h3>
+
+<table>
+<tr><th style="width:42%">Función</th><th>Devuelve</th></tr>
+<tr><td><code>Duration.Days(f2 - f1)</code></td><td>Días completos entre dos fechas</td></tr>
+<tr><td><code>Duration.TotalDays(f2 - f1)</code></td><td>Días con decimales (considera horas)</td></tr>
+<tr><td><code>Duration.Hours(...)</code></td><td>Horas de la duración</td></tr>
+<tr><td><code>Date.Year([Fecha])</code></td><td>2026</td></tr>
+<tr><td><code>Date.Month([Fecha])</code></td><td>8</td></tr>
+<tr><td><code>Date.MonthName([Fecha])</code></td><td>agosto</td></tr>
+<tr><td><code>Date.QuarterOfYear([Fecha])</code></td><td>3</td></tr>
+<tr><td><code>Date.DayOfWeekName([Fecha])</code></td><td>sábado</td></tr>
+<tr><td><code>DateTime.LocalNow()</code></td><td>Fecha y hora actual</td></tr>
+</table>
+
+<h3>Otras operaciones frecuentes</h3>
+
+<table>
+<tr><th style="width:32%">Necesito</th><th>Dónde está</th></tr>
+<tr><td>Unir dos tablas lado a lado (por llave)</td><td>Combinar consultas</td></tr>
+<tr><td>Apilar dos tablas con mismas columnas</td><td>Anexar consultas</td></tr>
+<tr><td>Agrupar y totalizar</td><td>Transformar → Agrupar por</td></tr>
+<tr><td>Pasar columnas a filas</td><td>Transformar → Anular dinamización</td></tr>
+<tr><td>Pasar filas a columnas</td><td>Transformar → Columna dinámica</td></tr>
+<tr><td>Quitar filas duplicadas</td><td>Inicio → Quitar filas → Quitar duplicados</td></tr>
+<tr><td>Separar una columna en dos</td><td>Dividir columna</td></tr>
+</table>
+
+<div class="caja regla">
+  <span class="tag">Regla</span>
+  <p>Antes de quitar duplicados, <b>limpia</b>. Si una fila dice <code>eq-0092</code> y
+  otra <code>EQ-0092</code>, Power Query las ve distintas y no las elimina. El orden
+  correcto siempre es: normalizar primero, deduplicar después.</p>
+</div>
+
+<hr>
+
+<!-- ============ 4 ============ -->
+<h2 id="c4"><span class="num">Capítulo cuatro</span>El modelo de datos</h2>
+
+<p>El modelo es donde le explicas a Power BI cómo se conectan las tablas. Si está
+mal, todo lo que venga después va a estar mal, y de una forma que no siempre grita
+error: simplemente entrega números incorrectos.</p>
+
+<h3>Hechos y dimensiones</h3>
+
+<p>Las tablas se dividen en dos tipos, y reconocerlos es lo primero.</p>
+
+<table>
+<tr><th style="width:22%">Tipo</th><th>Qué contiene</th><th style="width:26%">En tu caso</th></tr>
+<tr><td><b>Hechos</b></td><td>Los eventos. Muchas filas, se repiten los códigos, tiene los números que vas a sumar.</td><td>TAT_LOGISTICO, Costos</td></tr>
+<tr><td><b>Dimensiones</b></td><td>Los catálogos. Pocas filas, cada código aparece una sola vez, describe.</td><td>Países, Fábrica</td></tr>
+</table>
+
+<h3>El esquema estrella</h3>
+
+<p>La forma que debe tener el modelo: la tabla de hechos al centro, las dimensiones
+alrededor, todas apuntando hacia el centro.</p>
+
+<figure>
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,sans-serif">
+  <!-- centro -->
+  <rect x="250" y="120" width="200" height="100" rx="6" fill="#0A2A5E"/>
+  <text x="350" y="150" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">TAT_LOGISTICO</text>
+  <text x="350" y="172" fill="#8FA9CC" font-size="11.5" text-anchor="middle">13.548 filas</text>
+  <text x="350" y="192" fill="#F0B323" font-size="11.5" text-anchor="middle" letter-spacing="1">HECHOS</text>
+  <text x="350" y="210" fill="#8FA9CC" font-size="11" text-anchor="middle">lado muchos ( ∗ )</text>
+
+  <!-- dimensiones -->
+  <rect x="40" y="30" width="150" height="66" rx="6" fill="#fff" stroke="#1B5E9E" stroke-width="1.5"/>
+  <text x="115" y="55" font-size="13" font-weight="700" text-anchor="middle" fill="#14181F">Paises</text>
+  <text x="115" y="74" font-size="11" text-anchor="middle" fill="#6B7684">Cod → Codigo pais</text>
+  <text x="115" y="89" font-size="11" text-anchor="middle" fill="#1B5E9E" font-weight="700">lado 1</text>
+
+  <rect x="510" y="30" width="150" height="66" rx="6" fill="#fff" stroke="#1B5E9E" stroke-width="1.5"/>
+  <text x="585" y="55" font-size="13" font-weight="700" text-anchor="middle" fill="#14181F">Costos</text>
+  <text x="585" y="74" font-size="11" text-anchor="middle" fill="#6B7684">OS_KCH → OS_KCH</text>
+  <text x="585" y="89" font-size="11" text-anchor="middle" fill="#1B5E9E" font-weight="700">lado 1</text>
+
+  <rect x="275" y="270" width="150" height="56" rx="6" fill="#fff" stroke="#1B5E9E" stroke-width="1.5"/>
+  <text x="350" y="294" font-size="13" font-weight="700" text-anchor="middle" fill="#14181F">Fabrica</text>
+  <text x="350" y="313" font-size="11" text-anchor="middle" fill="#6B7684">FLOTA → FLOTA</text>
+
+  <!-- lineas -->
+  <path d="M190 78 L262 128" stroke="#1B5E9E" stroke-width="2" marker-end="url(#a2)"/>
+  <path d="M510 78 L438 128" stroke="#1B5E9E" stroke-width="2" marker-end="url(#a2)"/>
+  <path d="M350 268 L350 224" stroke="#1B5E9E" stroke-width="2" marker-end="url(#a2)"/>
+  <defs><marker id="a2" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#1B5E9E"/></marker></defs>
+
+  <text x="215" y="96" font-size="12" fill="#6B7684">1</text>
+  <text x="478" y="96" font-size="12" fill="#6B7684">1</text>
+  <text x="360" y="250" font-size="12" fill="#6B7684">1</text>
+  <text x="252" y="132" font-size="13" fill="#6B7684">∗</text>
+  <text x="440" y="132" font-size="13" fill="#6B7684">∗</text>
+  <text x="336" y="234" font-size="13" fill="#6B7684">∗</text>
+  <text x="350" y="18" font-size="12" fill="#6B7684" text-anchor="middle" letter-spacing="1.2">EL FILTRO VIAJA DEL 1 HACIA EL MUCHOS</text>
+</svg>
+<figcaption><b>Esquema estrella.</b> El filtro siempre viaja desde la dimensión
+hacia los hechos, nunca al revés. Cuando seleccionas "Chile" en el filtro de
+países, ese filtro baja a TAT_LOGISTICO y recorta las 13.548 filas a las de Chile.</figcaption>
+</figure>
+
+<h3>Cómo se crea una relación</h3>
+
+<ol class="pasos">
+<li>Ve a <b>Vista de modelo</b>, el tercer ícono de la barra izquierda.</li>
+<li>Arrastra el campo llave de la dimensión sobre el campo equivalente de la tabla
+de hechos.</li>
+<li>Haz doble clic en la línea para revisar cardinalidad y dirección.</li>
+</ol>
+
+<div class="caja err">
+  <span class="tag">Error que cometiste</span>
+  <p>Relacionaste <code>Areas[Área]</code> con <code>Empleados[ID_Area]</code>: el
+  <b>nombre</b> del área contra el <b>número</b> de identificación. En una tabla
+  decía "Finanzas" y en la otra decía 3. Nunca coinciden, y todo cayó en
+  <em>(en blanco)</em>.</p>
+  <p>La relación va siempre <b>llave con llave</b>. El nombre es un atributo
+  descriptivo: puede repetirse, puede venir mal escrito, no sirve para unir.</p>
+</div>
+
+<h3>Cardinalidad</h3>
+
+<table>
+<tr><th style="width:22%">Tipo</th><th>Cuándo</th><th style="width:24%">Veredicto</th></tr>
+<tr><td>Uno a muchos (1:∗)</td><td>El campo es único en una tabla y se repite en la otra</td><td>Lo normal, lo deseable</td></tr>
+<tr><td>Uno a uno (1:1)</td><td>Único en las dos</td><td>Raro. Casi siempre eran una sola tabla</td></tr>
+<tr><td>Muchos a muchos (∗:∗)</td><td>Se repite en ambas</td><td>Evítalo. Señal de que falta una dimensión</td></tr>
+</table>
+
+<div class="caja">
+  <span class="tag">Qué hacer si te obliga a muchos-a-muchos</span>
+  <p>Significa que el campo se repite en las dos tablas. La solución correcta es
+  crear una tabla intermedia con los valores únicos:</p>
+  <pre style="margin-top:10px"><code>DimFlota = <span class="f">DISTINCT</span>(TAT_LOGISTICO[FLOTA])</code></pre>
+  <p>Y relacionar ambas contra esa. Es lo que se llama tabla puente.</p>
+</div>
+
+<h3>La trampa de los espacios en la llave</h3>
+
+<p>Te pasó con <code>FLOTA</code>: existía <code>"PC8000-6D"</code> y también
+<code>"PC8000-6D "</code> con un espacio al final. Para Power BI son dos flotas
+distintas, y la relación uno-a-muchos se vuelve imposible.</p>
+
+<div class="caja regla">
+  <span class="tag">Regla</span>
+  <p>Antes de crear cualquier relación, aplica <code>Text.Trim</code> y
+  <code>Text.Upper</code> a los campos llave <b>de las dos tablas</b>. Limpiar solo
+  una no sirve de nada.</p>
+</div>
+
+<h3>Dirección del filtro cruzado</h3>
+
+<p>Al abrir una relación verás la opción "Dirección de filtro cruzado" con dos
+valores: <em>Único</em> y <em>Ambos</em>.</p>
+
+<p><b>Único</b> es el correcto casi siempre: el filtro viaja de la dimensión hacia
+los hechos. <b>Ambos</b> permite que viaje en las dos direcciones, y aunque suena
+mejor, genera cálculos ambiguos y modelos lentos. Úsalo solo cuando sepas
+exactamente por qué lo necesitas.</p>
+
+<h3>Ocultar lo que no se usa</h3>
+
+<p>Un modelo prolijo esconde las columnas llave, porque nadie va a arrastrar
+<code>ID_Area</code> a un gráfico. Clic derecho sobre la columna → <b>Ocultar en la
+vista de informe</b>. El modelo queda más limpio y se nota el criterio.</p>
+
+<hr>
+
+<!-- ============ 5 ============ -->
+<h2 id="c5"><span class="num">Capítulo cinco</span>DAX: los dos conceptos que lo explican todo</h2>
+
+<p>DAX tiene fama de difícil, pero la dificultad se concentra en dos ideas. Si las
+entiendes, el resto es vocabulario.</p>
+
+<h3>Concepto 1 — Columna calculada o medida</h3>
+
+<p>Es la decisión que más errores causa cuando alguien parte. Tú lo enfrentaste
+tres veces en esta prueba.</p>
+
+<figure>
+<svg viewBox="0 0 700 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,sans-serif">
+  <text x="20" y="22" font-size="13" font-weight="700" fill="#0A2A5E" letter-spacing="1">COLUMNA CALCULADA</text>
+  <text x="20" y="42" font-size="12" fill="#6B7684">Un valor para cada fila. Se guarda en la tabla.</text>
+  <!-- tabla columna -->
+  <rect x="20" y="54" width="300" height="26" fill="#0A2A5E"/>
+  <text x="34" y="72" font-size="12" fill="#fff">FECHA</text>
+  <text x="150" y="72" font-size="12" fill="#fff">INGRESO</text>
+  <text x="252" y="72" font-size="12" fill="#F0B323">Dias</text>
+  <g font-size="12" fill="#14181F">
+    <rect x="20" y="80" width="300" height="24" fill="#fff" stroke="#DCE3EC"/>
+    <text x="34" y="97">01-04-2026</text><text x="150" y="97">14-04-2026</text><text x="252" y="97" font-weight="700">13</text>
+    <rect x="20" y="104" width="300" height="24" fill="#F7F8FA" stroke="#DCE3EC"/>
+    <text x="34" y="121">03-04-2026</text><text x="150" y="121">10-04-2026</text><text x="252" y="121" font-weight="700">7</text>
+    <rect x="20" y="128" width="300" height="24" fill="#fff" stroke="#DCE3EC"/>
+    <text x="34" y="145">05-04-2026</text><text x="150" y="145" fill="#6B7684">(vacío)</text><text x="252" y="145" fill="#6B7684">(vacío)</text>
+    <rect x="20" y="152" width="300" height="24" fill="#F7F8FA" stroke="#DCE3EC"/>
+    <text x="34" y="169">08-04-2026</text><text x="150" y="169">20-04-2026</text><text x="252" y="169" font-weight="700">12</text>
+  </g>
+  <text x="20" y="200" font-size="12" fill="#6B7684">Lee el dato de SU fila. Se calcula una vez y queda fijo.</text>
+
+  <text x="390" y="22" font-size="13" font-weight="700" fill="#0A2A5E" letter-spacing="1">MEDIDA</text>
+  <text x="390" y="42" font-size="12" fill="#6B7684">Un número que responde al filtro del visual.</text>
+  <rect x="390" y="54" width="290" height="26" fill="#0A2A5E"/>
+  <text x="404" y="72" font-size="12" fill="#fff">COMPONENTE</text>
+  <text x="600" y="72" font-size="12" fill="#F0B323">Promedio_TAT</text>
+  <g font-size="12" fill="#14181F">
+    <rect x="390" y="80" width="290" height="24" fill="#fff" stroke="#DCE3EC"/>
+    <text x="404" y="97">Motor Diesel</text><text x="640" y="97" font-weight="700">15</text>
+    <rect x="390" y="104" width="290" height="24" fill="#F7F8FA" stroke="#DCE3EC"/>
+    <text x="404" y="121">Radiador</text><text x="640" y="121" font-weight="700">10</text>
+    <rect x="390" y="128" width="290" height="24" fill="#fff" stroke="#DCE3EC"/>
+    <text x="404" y="145">Chasis</text><text x="640" y="145" font-weight="700">7</text>
+    <rect x="390" y="152" width="290" height="24" fill="#EEF2F7" stroke="#0A2A5E"/>
+    <text x="404" y="169" font-weight="700">Total</text><text x="640" y="169" font-weight="700">10</text>
+  </g>
+  <text x="390" y="200" font-size="12" fill="#6B7684">La MISMA fórmula da un valor distinto en cada celda.</text>
+
+  <rect x="20" y="222" width="660" height="90" rx="5" fill="#FFFBF0" stroke="#F0B323"/>
+  <text x="40" y="248" font-size="13" font-weight="700" fill="#A87708">CÓMO DECIDIR</text>
+  <text x="40" y="272" font-size="13" fill="#14181F">La fórmula RESUME muchas filas (SUM, AVERAGE, COUNT, MAX, SUMX) → es MEDIDA</text>
+  <text x="40" y="296" font-size="13" fill="#14181F">La fórmula LEE el dato de la fila actual (IF sobre un campo, YEAR de una fecha) → es COLUMNA</text>
+</svg>
+<figcaption><b>La distinción.</b> Cuando pusiste <code>SUMX</code> en una columna
+calculada, cada una de las 13.548 filas recorrió la tabla entera y devolvió el
+gran total. Por eso viste 3.453.575.800 repetido en todas.</figcaption>
+</figure>
+
+<table>
+<tr><th style="width:26%"></th><th>Columna calculada</th><th>Medida</th></tr>
+<tr><td>Cuándo se calcula</td><td>Al cargar o actualizar</td><td>Cada vez que se dibuja un visual</td></tr>
+<tr><td>Dónde vive</td><td>Ocupa espacio en el archivo</td><td>No ocupa espacio</td></tr>
+<tr><td>Ve</td><td>El dato de su propia fila</td><td>El conjunto que le deja el filtro</td></tr>
+<tr><td>Sirve para</td><td>Filtrar, agrupar, poner en un eje</td><td>Mostrar un resultado</td></tr>
+<tr><td>Cómo se crea</td><td>Clic derecho tabla → Nueva columna</td><td>Clic derecho tabla → Nueva medida</td></tr>
+<tr><td>Cómo verificar</td><td>La cinta dice "Herramientas de columnas"</td><td>La cinta dice "Herramientas de medidas"</td></tr>
+</table>
+
+<div class="caja ok">
+  <span class="tag">Verificación rápida</span>
+  <p>Después de crear cualquier cosa en DAX, mira el nombre de la cinta superior.
+  Si dice "Herramientas de columnas" y esperabas una medida, bórrala y créala de
+  nuevo desde el lugar correcto. Toma cinco segundos y evita una hora de
+  confusión.</p>
+</div>
+
+<h3>Concepto 2 — El contexto</h3>
+
+<p>Una medida no tiene un valor fijo. Su valor depende de <b>dónde la pongas</b>.
+Eso se llama contexto, y viene de dos fuentes.</p>
+
+<p><b>Contexto de filtro:</b> todo lo que está recortando los datos en ese momento.
+La fila de la tabla donde está la celda, la columna, las segmentaciones activas,
+los filtros del panel.</p>
+
+<figure>
+<svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,sans-serif">
+  <text x="350" y="18" font-size="12" fill="#6B7684" text-anchor="middle" letter-spacing="1.2">LA MISMA MEDIDA, TRES CONTEXTOS</text>
+
+  <rect x="20" y="36" width="200" height="180" rx="6" fill="#fff" stroke="#DCE3EC"/>
+  <text x="120" y="60" font-size="12.5" font-weight="700" text-anchor="middle" fill="#0A2A5E">En una tarjeta sola</text>
+  <text x="120" y="82" font-size="11.5" text-anchor="middle" fill="#6B7684">Sin ningún filtro</text>
+  <rect x="45" y="96" width="150" height="54" rx="4" fill="#EEF2F7"/>
+  <text x="120" y="130" font-size="26" font-weight="700" text-anchor="middle" fill="#0A2A5E">10,4</text>
+  <text x="120" y="172" font-size="11.5" text-anchor="middle" fill="#14181F">Promedia las</text>
+  <text x="120" y="189" font-size="11.5" text-anchor="middle" fill="#14181F">13.548 filas</text>
+
+  <rect x="250" y="36" width="200" height="180" rx="6" fill="#fff" stroke="#DCE3EC"/>
+  <text x="350" y="60" font-size="12.5" font-weight="700" text-anchor="middle" fill="#0A2A5E">En un gráfico</text>
+  <text x="350" y="82" font-size="11.5" text-anchor="middle" fill="#6B7684">Filtro: Motor Diesel</text>
+  <rect x="275" y="96" width="150" height="54" rx="4" fill="#EEF2F7"/>
+  <text x="350" y="130" font-size="26" font-weight="700" text-anchor="middle" fill="#0A2A5E">15,0</text>
+  <text x="350" y="172" font-size="11.5" text-anchor="middle" fill="#14181F">Promedia solo las filas</text>
+  <text x="350" y="189" font-size="11.5" text-anchor="middle" fill="#14181F">de ese componente</text>
+
+  <rect x="480" y="36" width="200" height="180" rx="6" fill="#fff" stroke="#DCE3EC"/>
+  <text x="580" y="60" font-size="12.5" font-weight="700" text-anchor="middle" fill="#0A2A5E">En una matriz</text>
+  <text x="580" y="82" font-size="11.5" text-anchor="middle" fill="#6B7684">Motor Diesel + 2024</text>
+  <rect x="505" y="96" width="150" height="54" rx="4" fill="#EEF2F7"/>
+  <text x="580" y="130" font-size="26" font-weight="700" text-anchor="middle" fill="#0A2A5E">13,0</text>
+  <text x="580" y="172" font-size="11.5" text-anchor="middle" fill="#14181F">Dos filtros a la vez,</text>
+  <text x="580" y="189" font-size="11.5" text-anchor="middle" fill="#14181F">se aplican juntos</text>
+</svg>
+<figcaption><b>Contexto de filtro.</b> <code>Promedio_TAT = AVERAGE(TAT[Dias])</code>
+no cambia nunca. Lo que cambia es el conjunto de filas que le llega. Por eso "por
+tipo de componente" no va en la fórmula: lo hace el visual.</figcaption>
+</figure>
+
+<p><b>Contexto de fila:</b> existe cuando algo recorre la tabla fila por fila. Lo
+tienen las columnas calculadas y las funciones iteradoras. Es lo que permite decir
+"el INGRESO_TALLER <em>de esta fila</em>".</p>
+
+<div class="caja">
+  <span class="tag">Por qué una medida sola no puede leer una fila</span>
+  <p>Si escribes <code>Medida = TAT[Dias] * 2</code>, DAX te va a dar error: no sabe
+  de cuál de las 13.548 filas hablas. Una medida no tiene contexto de fila. Para
+  tenerlo hay que crearlo, y eso es exactamente lo que hacen las funciones
+  terminadas en X.</p>
+</div>
+
+<h3>Los iteradores: las funciones con X</h3>
+
+<p><code>SUM</code> agarra una columna completa y la aplasta en un número. No puede
+hacer un cálculo distinto por fila.</p>
+
+<p><code>SUMX</code> sí: recorre la tabla, evalúa una expresión en cada fila, guarda
+el resultado, y al final suma todo.</p>
+
+<figure>
+<svg viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,sans-serif">
+  <text x="20" y="20" font-size="13" font-weight="700" fill="#0A2A5E">SUMX(TAT_LOGISTICO, SWITCH(país, conversión))</text>
+
+  <rect x="20" y="36" width="260" height="26" fill="#0A2A5E"/>
+  <text x="34" y="54" font-size="12" fill="#fff">País</text>
+  <text x="150" y="54" font-size="12" fill="#fff">Costo original</text>
+  <g font-size="12">
+    <rect x="20" y="62" width="260" height="26" fill="#fff" stroke="#DCE3EC"/>
+    <text x="34" y="80">Q32 (Chile)</text><text x="150" y="80">185.200 CLP</text>
+    <rect x="20" y="88" width="260" height="26" fill="#F7F8FA" stroke="#DCE3EC"/>
+    <text x="34" y="106">J12 (Alemania)</text><text x="150" y="106">340 EUR</text>
+    <rect x="20" y="114" width="260" height="26" fill="#fff" stroke="#DCE3EC"/>
+    <text x="34" y="132">S02 (USA)</text><text x="150" y="132">1.200 USD</text>
+  </g>
+
+  <path d="M292 100 L340 100" stroke="#F0B323" stroke-width="2.5" marker-end="url(#a3)"/>
+  <defs><marker id="a3" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#F0B323"/></marker></defs>
+  <text x="316" y="90" font-size="10.5" fill="#A87708" text-anchor="middle">fila</text>
+  <text x="316" y="118" font-size="10.5" fill="#A87708" text-anchor="middle">a fila</text>
+
+  <rect x="350" y="36" width="200" height="26" fill="#1B5E9E"/>
+  <text x="364" y="54" font-size="12" fill="#fff">Convertido a USD</text>
+  <g font-size="12">
+    <rect x="350" y="62" width="200" height="26" fill="#fff" stroke="#DCE3EC"/>
+    <text x="364" y="80">185.200 ÷ 926 = 200</text>
+    <rect x="350" y="88" width="200" height="26" fill="#F7F8FA" stroke="#DCE3EC"/>
+    <text x="364" y="106">340 × 1059 ÷ 926 = 389</text>
+    <rect x="350" y="114" width="200" height="26" fill="#fff" stroke="#DCE3EC"/>
+    <text x="364" y="132">1.200 (ya está)</text>
+  </g>
+
+  <path d="M450 148 L450 176" stroke="#0A2A5E" stroke-width="2" marker-end="url(#a4)"/>
+  <defs><marker id="a4" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+    <path d="M0,0 L9,4.5 L0,9 z" fill="#0A2A5E"/></marker></defs>
+  <rect x="350" y="180" width="200" height="42" rx="4" fill="#0A2A5E"/>
+  <text x="450" y="207" font-size="16" font-weight="700" fill="#fff" text-anchor="middle">USD 1.789</text>
+
+  <rect x="20" y="240" width="660" height="40" rx="5" fill="#FDF0EE" stroke="#C0392B"/>
+  <text x="40" y="266" font-size="12.5" fill="#14181F">Con SUM sumarías 185.200 + 340 + 1.200 = 186.740 de nada. Pesos, euros y dólares en la misma bolsa.</text>
+</svg>
+<figcaption><b>Por qué el iterador.</b> La conversión depende de cada fila.
+<code>SUM</code> no puede mirar fila por fila; solo agarra una columna y la
+aplasta. Cuando el cálculo cambia según la fila, necesitas una función X.</figcaption>
+</figure>
+
+<pre><code>Costo USD =
+<span class="f">SUMX</span>(
+    TAT_LOGISTICO,
+    <span class="f">SWITCH</span>(
+        TAT_LOGISTICO[Codigo pais],
+        <span class="s">"Q32"</span>, <span class="f">RELATED</span>(Costos[Costo]) / 926,
+        <span class="s">"J12"</span>, <span class="f">RELATED</span>(Costos[Costo]) * 1059 / 926,
+        <span class="f">RELATED</span>(Costos[Costo])
+    )
+)</code></pre>
+
+<p>Toda función de agregación tiene su versión X: <code>SUMX</code>,
+<code>AVERAGEX</code>, <code>COUNTX</code>, <code>MAXX</code>, <code>MINX</code>,
+<code>RANKX</code>, <code>CONCATENATEX</code>. Todas reciben lo mismo: una tabla y
+una expresión.</p>
+
+<div class="caja regla">
+  <span class="tag">Regla</span>
+  <p>Si el cálculo es igual para todas las filas, usa <code>SUM</code>. Si cambia
+  según la fila, usa <code>SUMX</code>. Y como <code>SUMX</code> es más lento,
+  no lo uses cuando <code>SUM</code> alcanza.</p>
+</div>
+
+<hr>
+
+<!-- ============ 6 ============ -->
+<h2 id="c6"><span class="num">Capítulo seis</span>DAX: catálogo de funciones</h2>
+
+<h3>Agregaciones básicas</h3>
+
+<table>
+<tr><th style="width:34%">Función</th><th>Qué hace</th></tr>
+<tr><td><code>SUM(col)</code></td><td>Suma una columna numérica</td></tr>
+<tr><td><code>AVERAGE(col)</code></td><td>Promedio. <b>Ignora los blancos</b></td></tr>
+<tr><td><code>MIN(col)</code> / <code>MAX(col)</code></td><td>Menor y mayor valor</td></tr>
+<tr><td><code>COUNT(col)</code></td><td>Cuenta valores no vacíos</td></tr>
+<tr><td><code>COUNTA(col)</code></td><td>Cuenta también texto</td></tr>
+<tr><td><code>DISTINCTCOUNT(col)</code></td><td>Cuenta valores distintos</td></tr>
+<tr><td><code>COUNTROWS(tabla)</code></td><td>Cuenta filas de una tabla</td></tr>
+<tr><td><code>MEDIAN(col)</code></td><td>Mediana. Úsala cuando hay valores extremos</td></tr>
+<tr><td><code>DIVIDE(a, b, alt)</code></td><td>División segura. Devuelve <code>alt</code> si b es cero</td></tr>
+</table>
+
+<div class="caja regla">
+  <span class="tag">Regla</span>
+  <p>Nunca dividas con la barra <code>/</code> en DAX. Si el denominador es cero
+  te devuelve error y el visual completo se cae. <code>DIVIDE(a, b, 0)</code> hace lo
+  mismo pero se protege sola.</p>
+</div>
+
+<h3>Lógica y condiciones</h3>
+
+<table>
+<tr><th style="width:38%">Función</th><th>Qué hace</th></tr>
+<tr><td><code>IF(cond, si, no)</code></td><td>Condición simple</td></tr>
+<tr><td><code>SWITCH(campo, v1, r1, v2, r2, otro)</code></td><td>IF múltiple, más legible</td></tr>
+<tr><td><code>SWITCH(TRUE(), cond1, r1, cond2, r2, otro)</code></td><td>Truco para condiciones con rangos</td></tr>
+<tr><td><code>ISBLANK(col)</code></td><td>¿Está vacío? Verdadero o falso</td></tr>
+<tr><td><code>BLANK()</code></td><td>Devuelve vacío. Es el <code>null</code> de DAX</td></tr>
+<tr><td><code>COALESCE(a, b)</code></td><td>Devuelve a; si está vacío, devuelve b</td></tr>
+</table>
+
+<p>El truco de <code>SWITCH(TRUE(), ...)</code> vale oro cuando tienes tramos:</p>
+
+<pre><code>Clasificación TAT =
+<span class="f">SWITCH</span>(
+    <span class="f">TRUE</span>(),
+    <span class="f">ISBLANK</span>(TAT[Dias]), <span class="s">"Sin ingreso"</span>,
+    TAT[Dias] &lt;= 7,  <span class="s">"Rápido"</span>,
+    TAT[Dias] &lt;= 15, <span class="s">"Normal"</span>,
+    <span class="s">"Crítico"</span>
+)</code></pre>
+
+<p>Se lee mucho mejor que cuatro <code>IF</code> anidados. Y como en M, el orden va
+de la condición más exigente a la más suelta.</p>
+
+<h3>Fechas</h3>
+
+<table>
+<tr><th style="width:42%">Función</th><th>Devuelve</th></tr>
+<tr><td><code>TODAY()</code></td><td>Fecha de hoy</td></tr>
+<tr><td><code>NOW()</code></td><td>Fecha y hora</td></tr>
+<tr><td><code>YEAR(f)</code> · <code>MONTH(f)</code> · <code>DAY(f)</code></td><td>Los componentes por separado</td></tr>
+<tr><td><code>DATEDIFF(f1, f2, DAY)</code></td><td>Diferencia. También MONTH, YEAR, HOUR</td></tr>
+<tr><td><code>FORMAT(f, "MMMM")</code></td><td>Convierte a texto con formato</td></tr>
+<tr><td><code>EOMONTH(f, 0)</code></td><td>Último día del mes</td></tr>
+<tr><td><code>WEEKNUM(f)</code></td><td>Número de semana</td></tr>
+</table>
+
+<div class="caja err">
+  <span class="tag">Error que cometiste</span>
+  <p>Usaste <code>DAY()</code> creyendo que devolvía la fecha de hoy. <code>DAY()</code>
+  extrae el número del día de una fecha: si le pasas 22-08-2026 devuelve 22. La
+  fecha actual es <code>TODAY()</code>, sin argumentos.</p>
+  <p>También invertiste el orden de la resta. En <code>DATEDIFF</code> va primero la
+  fecha antigua: <code>DATEDIFF(desmontaje, TODAY(), DAY)</code>. Al revés te da
+  negativo.</p>
+</div>
+
+<h4>Cuando FORMAT no respeta el formato</h4>
+
+<p>En algunas configuraciones regionales en español, <code>FORMAT(fecha, "MMMM")</code>
+devuelve la fecha completa en vez del nombre del mes. Es un problema de
+localización, no de tu fórmula.</p>
+
+<p>La solución que nunca falla es explícita:</p>
+
+<pre><code>Mes_Desmontaje =
+<span class="f">SWITCH</span>(
+    <span class="f">MONTH</span>(TAT_Logistico[FECHA_DESMONTAJE]),
+    1, <span class="s">"Enero"</span>,  2, <span class="s">"Febrero"</span>, 3, <span class="s">"Marzo"</span>,     4,  <span class="s">"Abril"</span>,
+    5, <span class="s">"Mayo"</span>,   6, <span class="s">"Junio"</span>,   7, <span class="s">"Julio"</span>,     8,  <span class="s">"Agosto"</span>,
+    9, <span class="s">"Septiembre"</span>, 10, <span class="s">"Octubre"</span>, 11, <span class="s">"Noviembre"</span>, 12, <span class="s">"Diciembre"</span>
+)</code></pre>
+
+<p>Más larga, pero funciona en cualquier equipo y se entiende de una lectura. En una
+prueba técnica, iría directo a esta.</p>
+
+<h3>Relaciones</h3>
+
+<table>
+<tr><th style="width:38%">Función</th><th>Cuándo</th></tr>
+<tr><td><code>RELATED(tabla[col])</code></td><td>Traer un valor desde el lado <b>1</b>. Se usa desde el lado muchos.</td></tr>
+<tr><td><code>RELATEDTABLE(tabla)</code></td><td>Traer las filas del lado <b>muchos</b>. Se usa desde el lado 1.</td></tr>
+<tr><td><code>USERELATIONSHIP(a, b)</code></td><td>Activar una relación inactiva dentro de un CALCULATE</td></tr>
+</table>
+
+<h3>CALCULATE: la función central</h3>
+
+<p>Es la más importante de DAX y la única que puede <b>modificar el contexto de
+filtro</b>. Todo lo demás se construye sobre ella.</p>
+
+<pre><code>Costo Chile = <span class="f">CALCULATE</span>( [Costo USD], Paises[Pais] = <span class="s">"Chile"</span> )</code></pre>
+
+<p>Se lee: calcula la medida <code>[Costo USD]</code>, pero <b>reemplazando</b> el
+filtro de país por Chile. Aunque el usuario tenga seleccionado Perú, esta medida
+devuelve Chile.</p>
+
+<p>Los modificadores más útiles:</p>
+
+<table>
+<tr><th style="width:38%">Modificador</th><th>Qué hace</th></tr>
+<tr><td><code>ALL(tabla)</code></td><td>Quita todos los filtros. Sirve para calcular totales generales</td></tr>
+<tr><td><code>ALL(tabla[col])</code></td><td>Quita el filtro solo de esa columna</td></tr>
+<tr><td><code>ALLSELECTED()</code></td><td>Respeta lo que el usuario filtró, ignora el contexto del visual</td></tr>
+<tr><td><code>KEEPFILTERS(...)</code></td><td>Suma el filtro en vez de reemplazarlo</td></tr>
+<tr><td><code>REMOVEFILTERS(...)</code></td><td>Igual que ALL, nombre más claro</td></tr>
+<tr><td><code>FILTER(tabla, cond)</code></td><td>Filtro complejo, evaluado fila por fila</td></tr>
+</table>
+
+<p>El caso más común en la práctica: el porcentaje sobre el total.</p>
+
+<pre><code>% del total =
+<span class="f">DIVIDE</span>(
+    [Costo USD],
+    <span class="f">CALCULATE</span>( [Costo USD], <span class="f">ALL</span>(TAT_LOGISTICO[COMPONENTE]) )
+)</code></pre>
+
+<p>El numerador respeta el filtro del componente. El denominador lo quita, y por
+eso da el total general. La división entrega la participación de cada componente.</p>
+
+<h3>Inteligencia de tiempo</h3>
+
+<p>Para que estas funciones trabajen bien necesitas una <b>tabla calendario</b>
+marcada como tabla de fechas. Se crea así:</p>
+
+<pre><code>Calendario =
+<span class="f">ADDCOLUMNS</span>(
+    <span class="f">CALENDAR</span>( <span class="f">DATE</span>(2020,1,1), <span class="f">DATE</span>(2026,12,31) ),
+    <span class="s">"Año"</span>, <span class="f">YEAR</span>([Date]),
+    <span class="s">"NroMes"</span>, <span class="f">MONTH</span>([Date]),
+    <span class="s">"Trimestre"</span>, <span class="s">"Q"</span> &amp; <span class="f">QUARTER</span>([Date]),
+    <span class="s">"FY"</span>, <span class="s">"FY "</span> &amp; <span class="f">IF</span>( <span class="f">MONTH</span>([Date]) &gt;= 4, <span class="f">YEAR</span>([Date]), <span class="f">YEAR</span>([Date]) - 1 )
+)</code></pre>
+
+<p>Después la relacionas con tu fecha de desmontaje y la marcas: selecciona la
+tabla → <b>Herramientas de tabla → Marcar como tabla de fechas</b>.</p>
+
+<p>Con eso habilitas:</p>
+
+<table>
+<tr><th style="width:44%">Función</th><th>Qué calcula</th></tr>
+<tr><td><code>TOTALYTD(medida, fechas)</code></td><td>Acumulado del año hasta la fecha</td></tr>
+<tr><td><code>SAMEPERIODLASTYEAR(fechas)</code></td><td>El mismo período del año anterior</td></tr>
+<tr><td><code>DATEADD(fechas, -1, MONTH)</code></td><td>Desplaza el período</td></tr>
+<tr><td><code>PREVIOUSMONTH(fechas)</code></td><td>Mes anterior completo</td></tr>
+<tr><td><code>DATESYTD(fechas, "31/3")</code></td><td>Año hasta la fecha con cierre fiscal en marzo</td></tr>
+</table>
+
+<p>La comparación contra el año anterior, que es lo que más piden:</p>
+
+<pre><code>Costo año anterior =
+<span class="f">CALCULATE</span>( [Costo USD], <span class="f">SAMEPERIODLASTYEAR</span>(Calendario[Date]) )
+
+Variación % =
+<span class="f">DIVIDE</span>( [Costo USD] - [Costo año anterior], [Costo año anterior] )</code></pre>
+
+<div class="caja">
+  <span class="tag">El año fiscal</span>
+  <p>Komatsu es japonesa y su año fiscal parte en <b>abril</b>. Enero, febrero y
+  marzo pertenecen al año fiscal anterior. La fórmula que usaste:</p>
+  <pre style="margin-top:10px"><code>FY desmontaje =
+<span class="s">"FY "</span> &amp; <span class="f">IF</span>( <span class="f">MONTH</span>(TAT[FECHA_DESMONTAJE]) &gt;= 4,
+         <span class="f">YEAR</span>(TAT[FECHA_DESMONTAJE]),
+         <span class="f">YEAR</span>(TAT[FECHA_DESMONTAJE]) - 1 )</code></pre>
+  <p>Para verificar que quedó bien, busca una fila de febrero: debe mostrar el año
+  anterior. Si muestra el mismo año, el signo de la comparación está al revés.</p>
+</div>
+
+<h3>Texto y varios</h3>
+
+<table>
+<tr><th style="width:38%">Función</th><th>Qué hace</th></tr>
+<tr><td><code>a &amp; b</code></td><td>Concatena. <code>"FY " &amp; 2026</code> → "FY 2026"</td></tr>
+<tr><td><code>CONCATENATE(a, b)</code></td><td>Lo mismo, solo dos argumentos</td></tr>
+<tr><td><code>LEFT</code> · <code>RIGHT</code> · <code>MID</code></td><td>Extraer parte de un texto</td></tr>
+<tr><td><code>LEN(texto)</code></td><td>Cantidad de caracteres</td></tr>
+<tr><td><code>TRIM(texto)</code></td><td>Quitar espacios sobrantes</td></tr>
+<tr><td><code>UPPER</code> · <code>LOWER</code></td><td>Cambiar caja</td></tr>
+<tr><td><code>VALUES(col)</code></td><td>Los valores distintos visibles ahora</td></tr>
+<tr><td><code>DISTINCT(col)</code></td><td>Valores únicos. Útil para tablas puente</td></tr>
+<tr><td><code>SELECTEDVALUE(col)</code></td><td>El valor si hay uno solo seleccionado</td></tr>
+</table>
+
+<h3>Escribir DAX legible</h3>
+
+<p>Una fórmula de más de dos líneas se escribe con saltos y sangría. En el editor,
+<b>Shift+Enter</b> hace salto de línea sin confirmar.</p>
+
+<p>Y para cálculos intermedios, usa variables. Se leen mejor y se calculan una sola
+vez, así que además corren más rápido:</p>
+
+<pre><code>Variación % =
+<span class="k">VAR</span> Actual = [Costo USD]
+<span class="k">VAR</span> Anterior = <span class="f">CALCULATE</span>( [Costo USD], <span class="f">SAMEPERIODLASTYEAR</span>(Calendario[Date]) )
+<span class="k">RETURN</span>
+    <span class="f">DIVIDE</span>( Actual - Anterior, Anterior )</code></pre>
+
+<hr>
+
+<!-- ============ 7 ============ -->
+<h2 id="c7"><span class="num">Capítulo siete</span>Visuales y cómo elegirlos</h2>
+
+<h3>Qué visual para qué pregunta</h3>
+
+<table>
+<tr><th style="width:26%">Visual</th><th>Sirve para</th><th style="width:28%">Cuidado con</th></tr>
+<tr><td>Tarjeta</td><td>Un número clave, un KPI</td><td>Redondea solo. Revisa las unidades</td></tr>
+<tr><td>Columnas</td><td>Comparar pocas categorías</td><td>Sobre 10 categorías los nombres se cortan</td></tr>
+<tr><td>Barras horizontales</td><td>Comparar muchas categorías</td><td>Ordenar de mayor a menor</td></tr>
+<tr><td>Línea</td><td>Evolución en el tiempo</td><td>Solo para tiempo, nunca para categorías</td></tr>
+<tr><td>Matriz</td><td>Cruzar dos dimensiones</td><td>Es distinta de la tabla simple</td></tr>
+<tr><td>Tabla</td><td>Detalle fila por fila</td><td>No es para analizar, es para verificar</td></tr>
+<tr><td>Anillo o circular</td><td>Participación sobre un total</td><td>Máximo 4 categorías. Se lee mal</td></tr>
+<tr><td>Segmentación</td><td>Filtrar la página</td><td>Define la orientación y el orden</td></tr>
+<tr><td>Gráfico combinado</td><td>Dos métricas de escalas distintas</td><td>Rotula bien los dos ejes</td></tr>
+</table>
+
+<h3>La matriz</h3>
+
+<p>Es el visual que más rinde en análisis. Se confunde con la tabla, pero hacen
+cosas distintas: la tabla lista, la matriz cruza.</p>
+
+<table>
+<tr><th style="width:24%">Área</th><th>Qué va ahí</th><th style="width:30%">Tu caso</th></tr>
+<tr><td>Filas</td><td>La categoría que baja</td><td>COMPONENTE</td></tr>
+<tr><td>Columnas</td><td>La categoría que cruza</td><td>Año desmontaje</td></tr>
+<tr><td>Valores</td><td>La medida. Solo medidas</td><td>Promedio_TAT</td></tr>
+</table>
+
+<div class="caja err">
+  <span class="tag">Error que cometiste</span>
+  <p>Pusiste el año en <b>Valores</b> en vez de <b>Columnas</b>. Power BI lo trató
+  como un número a resumir y le aplicó "Primera fecha", así que mostró 2020 repetido
+  en toda la columna.</p>
+  <p>La distinción: una categoría abre filas o columnas. Un número a resumir va en
+  Valores. El año es categoría, aunque parezca número.</p>
+</div>
+
+<h4>Formato condicional</h4>
+
+<p>Convierte una matriz de números en algo que se lee de un vistazo. Clic derecho
+sobre la medida en el área Valores → <b>Formato condicional</b> → <b>Escalas de
+color</b>. Elige rojo para los valores altos si un TAT alto es malo.</p>
+
+<h3>Segmentaciones</h3>
+
+<p>Los tres ajustes que cambian cómo se ven:</p>
+
+<ul>
+<li><b>Orientación:</b> Formato → Configuración de la segmentación → Horizontal.
+Ahorra muchísimo espacio.</li>
+<li><b>Tipo:</b> lista, desplegable o mosaico. El desplegable ocupa menos pero
+esconde los valores.</li>
+<li><b>Selección múltiple:</b> puedes exigir Ctrl o permitir clic simple.</li>
+</ul>
+
+<h4>La trampa del orden de los meses</h4>
+
+<p>Los meses son texto, así que Power BI los ordena alfabéticamente: abril, agosto,
+diciembre, enero. Un desastre.</p>
+
+<figure>
+<svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,sans-serif">
+  <rect x="30" y="30" width="180" height="180" rx="6" fill="#fff" stroke="#C0392B" stroke-width="1.5"/>
+  <text x="120" y="52" font-size="12.5" font-weight="700" text-anchor="middle" fill="#C0392B">Sin ordenar</text>
+  <g font-size="13" fill="#14181F">
+    <text x="55" y="80">Abril</text><text x="55" y="104">Agosto</text>
+    <text x="55" y="128">Diciembre</text><text x="55" y="152">Enero</text>
+    <text x="55" y="176">Febrero</text><text x="55" y="198" fill="#6B7684">…</text>
+  </g>
+
+  <rect x="255" y="86" width="190" height="66" rx="5" fill="#FFFBF0" stroke="#F0B323"/>
+  <text x="350" y="108" font-size="11.5" font-weight="700" text-anchor="middle" fill="#A87708">ORDENAR POR COLUMNA</text>
+  <text x="350" y="128" font-size="11.5" text-anchor="middle" fill="#14181F">Mes_Desmontaje</text>
+  <text x="350" y="144" font-size="11.5" text-anchor="middle" fill="#14181F">ordenado por NroMes</text>
+
+  <rect x="490" y="30" width="180" height="180" rx="6" fill="#fff" stroke="#1B7F5A" stroke-width="1.5"/>
+  <text x="580" y="52" font-size="12.5" font-weight="700" text-anchor="middle" fill="#1B7F5A">Ordenado</text>
+  <g font-size="13" fill="#14181F">
+    <text x="515" y="80">Enero</text><text x="640" y="80" fill="#6B7684" font-size="11">1</text>
+    <text x="515" y="104">Febrero</text><text x="640" y="104" fill="#6B7684" font-size="11">2</text>
+    <text x="515" y="128">Marzo</text><text x="640" y="128" fill="#6B7684" font-size="11">3</text>
+    <text x="515" y="152">Abril</text><text x="640" y="152" fill="#6B7684" font-size="11">4</text>
+    <text x="515" y="176">Mayo</text><text x="640" y="176" fill="#6B7684" font-size="11">5</text>
+    <text x="515" y="198" fill="#6B7684">…</text>
+  </g>
+</svg>
+<figcaption><b>Dos columnas trabajando juntas.</b> Una con la etiqueta legible, otra
+con el número que define el orden. El mismo patrón sirve para días de la semana,
+tramos (Chico/Mediano/Grande) y niveles de criticidad.</figcaption>
+</figure>
+
+<ol class="pasos">
+<li>Crea la columna con el número: <code>NroMes = MONTH(TAT[FECHA_DESMONTAJE])</code></li>
+<li>Selecciona la columna de texto <code>Mes_Desmontaje</code> en el panel de Datos.</li>
+<li>Cinta <b>Herramientas de columnas</b> → <b>Ordenar por columna</b> → elige
+<code>NroMes</code>.</li>
+</ol>
+
+<h3>Interacciones entre visuales</h3>
+
+<p>Por defecto, al hacer clic en un visual todos los demás se filtran. Eso se
+controla: selecciona un visual → cinta <b>Formato</b> → <b>Editar
+interacciones</b>. Aparecen iconos sobre cada visual con tres opciones: filtrar,
+resaltar, o ninguna.</p>
+
+<h3>Filtros: los tres niveles</h3>
+
+<table>
+<tr><th style="width:30%">Nivel</th><th>Alcance</th></tr>
+<tr><td>Filtros de este objeto visual</td><td>Solo ese gráfico</td></tr>
+<tr><td>Filtros de esta página</td><td>Todos los visuales de la página</td></tr>
+<tr><td>Filtros de todas las páginas</td><td>El informe completo</td></tr>
+</table>
+
+<p>El filtro <b>N superior</b> vive en el panel de filtros y es el que necesitabas
+para el Top 10 de componentes: eliges N superior, cantidad 10, y por valor
+Promedio_TAT.</p>
+
+<h3>Formato de números</h3>
+
+<p>Se puede definir en dos lugares, y conviene entender la diferencia.</p>
+
+<p>En la <b>medida</b> (Herramientas de medidas → Formato): se aplica en todos los
+visuales donde uses esa medida. Es la forma correcta.</p>
+
+<p>En el <b>visual</b> (panel Formato → unidades de visualización): solo ahí. Sirve
+para casos puntuales, como mostrar millones en una tarjeta.</p>
+
+<div class="caja">
+  <span class="tag">Criterio</span>
+  <p>Un costo de 3.453.575.800 se lee mejor como "3,45 MM". Un horómetro de 18.044
+  se lee peor como "18 mil". La regla: cuando la magnitud es lo que importa,
+  abrevia; cuando el valor exacto importa, muéstralo completo.</p>
+</div>
+
+<hr>
+
+<!-- ============ 8 ============ -->
+<h2 id="c8"><span class="num">Capítulo ocho</span>Diseño del tablero</h2>
+
+<p>Un informe bien calculado pero mal presentado se ve como un ejercicio. Uno bien
+presentado se ve como un entregable. La diferencia son unas pocas decisiones.</p>
+
+<h3>La jerarquía de lectura</h3>
+
+<p>El ojo recorre de arriba a la izquierda hacia abajo a la derecha. Aprovéchalo:</p>
+
+<ol class="pasos">
+<li><b>Título y contexto</b> arriba: qué muestra, de cuándo son los datos.</li>
+<li><b>Filtros</b> en una franja horizontal debajo del título.</li>
+<li><b>KPI</b> en fila: tres a cinco números grandes.</li>
+<li><b>El gráfico principal</b>, el que responde la pregunta central.</li>
+<li><b>Detalle</b> abajo: tablas y matrices de apoyo.</li>
+</ol>
+
+<h3>Color con criterio</h3>
+
+<p>El error más común es usar muchos colores. Un tablero corporativo serio usa uno.</p>
+
+<ul>
+<li>Un color de acento para los datos. Azul Komatsu <code>#0A2A5E</code> o
+<code>#1B5E9E</code>.</li>
+<li>Grises neutros para ejes, líneas y texto secundario.</li>
+<li>Rojo y verde <b>solo</b> para bueno y malo. Si los usas de decoración, pierden
+significado.</li>
+<li>Fondo claro uniforme. Nada de degradados.</li>
+</ul>
+
+<h3>Fondo de página con imagen</h3>
+
+<p>La técnica que usamos: se diseña el fondo con las tarjetas y títulos en
+PowerPoint, se exporta como PNG y se carga en Power BI. Encima se colocan los
+visuales sin fondo ni borde.</p>
+
+<ol class="pasos">
+<li>Diseña en PowerPoint tamaño 16:9. Exporta como PNG a 1280×720.</li>
+<li>En Power BI, clic en zona vacía del lienzo (sin visual seleccionado).</li>
+<li>Formato → Fondo de página → Examinar → tu PNG.</li>
+<li>Ajuste de imagen: <b>Ajustar</b>. Transparencia: <b>0%</b>. Este último se
+olvida siempre y por defecto viene en 90%.</li>
+<li>En cada visual: Formato → Fondo <b>Desactivado</b>, Borde <b>Desactivado</b>,
+Título <b>Desactivado</b> (el título ya está en el fondo).</li>
+</ol>
+
+<h3>Detalles que se notan</h3>
+
+<ul>
+<li><b>Alinea.</b> Selecciona varios visuales → Formato → Alinear. Un tablero
+alineado se ve profesional aunque el contenido sea simple.</li>
+<li><b>Nombra los visuales.</b> Un gráfico que dice "Promedio_TAT por COMPONENTE"
+se ve automático. "TAT promedio por componente (días)" se ve escrito por alguien.</li>
+<li><b>Pon las unidades.</b> Días, USD, horas. Un número sin unidad no significa nada.</li>
+<li><b>Botón de restablecer filtros.</b> Insertar → Botones → Restablecer. Se
+agradece.</li>
+<li><b>Información sobre herramientas.</b> El campo "Tooltip" de cada visual permite
+mostrar datos extra al pasar el mouse.</li>
+</ul>
+
+<hr>
+
+<!-- ============ 9 ============ -->
+<h2 id="c9"><span class="num">Capítulo nueve</span>Bitácora de errores reales</h2>
+
+<p>Estos son los errores que aparecieron resolviendo la prueba, con el síntoma que
+los delata. Cuando algo falle, busca aquí primero.</p>
+
+<table>
+<tr><th style="width:30%">Síntoma</th><th style="width:34%">Causa</th><th>Solución</th></tr>
+
+<tr><td>Todas las filas muestran el mismo total</td>
+<td>La fórmula con <code>SUMX</code> se creó como columna calculada</td>
+<td>Borrarla y crearla como medida</td></tr>
+
+<tr><td>Todo cae en "(en blanco)"</td>
+<td>La relación une el nombre con el ID, o la dirección está invertida</td>
+<td>Relacionar llave con llave</td></tr>
+
+<tr><td>El visual da error al agregar una medida</td>
+<td>La columna quedó tipo Texto y <code>AVERAGE</code> no promedia texto</td>
+<td>Cambiar tipo a Número entero en Power Query</td></tr>
+
+<tr><td>La columna se llena de <em>Error</em></td>
+<td>Valores tipo "S/I" mezclados con números</td>
+<td>Reemplazar por vacío antes de tipificar</td></tr>
+
+<tr><td><code>Text.Trim</code> no quita los espacios</td>
+<td>Son carácter 160, no espacios normales</td>
+<td><code>Text.Replace</code> con <code>Character.FromNumber(160)</code></td></tr>
+
+<tr><td>Los meses salen desordenados</td>
+<td>Son texto y se ordenan alfabéticamente</td>
+<td>Ordenar por columna, usando NroMes</td></tr>
+
+<tr><td><code>FORMAT</code> devuelve la fecha completa</td>
+<td>Configuración regional no interpreta "MMMM"</td>
+<td>Usar <code>SWITCH</code> sobre <code>MONTH</code></td></tr>
+
+<tr><td>La resta de fechas da "13.00:00:00"</td>
+<td>En M la resta devuelve duración, no número</td>
+<td>Envolver en <code>Duration.Days(...)</code></td></tr>
+
+<tr><td>Días negativos en el TAT</td>
+<td>Error de digitación en el origen</td>
+<td>Detectar, documentar, no borrar en silencio</td></tr>
+
+<tr><td>El código M no compila</td>
+<td>Falta coma entre pasos, o el paso quedó después del <code>in</code></td>
+<td>Coma entre pasos, ninguna en el último, <code>in</code> apunta al final</td></tr>
+
+<tr><td>No se puede crear relación uno a muchos</td>
+<td>La llave tiene duplicados o espacios finales</td>
+<td>Limpiar con <code>Text.Trim</code>, o crear tabla puente</td></tr>
+
+<tr><td>El fondo de página se ve blanco</td>
+<td>La transparencia viene en 90% por defecto</td>
+<td>Ponerla en 0%</td></tr>
+
+<tr><td>Se quitan menos duplicados de los esperados</td>
+<td>Se deduplicó antes de normalizar mayúsculas y espacios</td>
+<td>Limpiar primero, deduplicar después</td></tr>
+</table>
+
+<div class="caja regla">
+  <span class="tag">Las tres preguntas de diagnóstico</span>
+  <p>Cuando algo no funcione, en este orden: <b>¿es medida o columna?</b> ·
+  <b>¿de qué tipo es el dato?</b> · <b>¿la relación va llave con llave y en la
+  dirección correcta?</b> Nueve de cada diez problemas están en una de esas tres.</p>
+</div>
+
+<hr>
+
+<!-- ============ 10 ============ -->
+<h2 id="c10"><span class="num">Capítulo diez</span>Lo que no vimos y deberías saber</h2>
+
+<h3>Grupos de cálculo</h3>
+
+<p>Si necesitas ver cada medida en versión actual, año anterior y variación, tendrías
+que escribir tres medidas por cada una. Con quince medidas son cuarenta y cinco.</p>
+
+<p>Los <b>grupos de cálculo</b> resuelven eso: defines la lógica una vez y se aplica
+a todas las medidas. Se crean con la herramienta externa Tabular Editor, que es
+gratuita. Es el salto más grande entre un usuario intermedio y uno avanzado.</p>
+
+<h3>Parámetros de campo</h3>
+
+<p>Permiten que el usuario elija qué medida ver en un gráfico desde una segmentación.
+Un solo visual reemplaza a cinco. Se crean en <b>Modelado → Nuevo parámetro →
+Campos</b>.</p>
+
+<h3>Detalles y navegación</h3>
+
+<p>La función <b>Obtener detalles</b> permite hacer clic derecho en una barra y saltar
+a otra página filtrada por ese valor. Es lo que convierte un tablero en una
+herramienta de análisis: el gerente ve el total, hace clic, y llega al detalle.</p>
+
+<h3>Marcadores</h3>
+
+<p>Guardan un estado de la página —qué filtros, qué visuales visibles— y permiten
+volver a él con un botón. Se usan para armar vistas alternativas sin ocupar más
+páginas.</p>
+
+<h3>Actualización incremental</h3>
+
+<p>Cuando la tabla de hechos tiene millones de filas, recargar todo cada vez es
+inviable. La actualización incremental refresca solo los últimos meses y deja el
+histórico intacto.</p>
+
+<h3>Publicar y compartir</h3>
+
+<p>El archivo <code>.pbix</code> es el de trabajo. Para compartir se publica al
+servicio de Power BI, se organiza en un área de trabajo, y desde ahí se programa la
+actualización automática. Si el origen es un archivo local, se necesita una puerta
+de enlace instalada en un equipo que esté encendido.</p>
+
+<h3>Rendimiento</h3>
+
+<p>Cuatro reglas que hacen la mayor diferencia:</p>
+
+<ul>
+<li>Quita las columnas que no usas. Cada columna ocupa memoria.</li>
+<li>Prefiere medidas sobre columnas calculadas.</li>
+<li>Evita columnas de texto largo y de alta cardinalidad como llaves.</li>
+<li>Usa el <b>Analizador de rendimiento</b> (pestaña Ver) para encontrar el visual
+lento.</li>
+</ul>
+
+<h3>Python y R</h3>
+
+<p>Power BI permite ejecutar scripts de Python dentro de Power Query y también como
+visual. Con tu formación en investigación operativa y Python, eso te abre cosas que
+DAX no hace: regresiones, pronósticos, optimización, clustering. Es una ventaja que
+poca gente en cargos de planificación tiene.</p>
+
+<hr>
+
+<!-- ============ 11 ============ -->
+<h2 id="c11"><span class="num">Capítulo once</span>Glosario de planificación y mantenimiento</h2>
+
+<table>
+<tr><th style="width:26%">Término</th><th>Qué significa</th></tr>
+<tr><td><b>TAT</b></td><td>Turn Around Time. Tiempo total desde que se desmonta un componente hasta que vuelve disponible. El TAT logístico es solo el tramo desmontaje → ingreso a taller.</td></tr>
+<tr><td><b>Pool</b></td><td>Stock de componentes de repuesto que rota entre equipos. Se dimensiona con la ley de Little: pool = tasa de cambios × TAT.</td></tr>
+<tr><td><b>Faena</b></td><td>El sitio minero donde opera la flota. Escondida, Collahuasi, Chuquicamata.</td></tr>
+<tr><td><b>CAEX</b></td><td>Camión de Extracción. Los camiones mineros grandes.</td></tr>
+<tr><td><b>Horómetro</b></td><td>Contador de horas de operación. Es el "kilometraje" del equipo y define cuándo toca cambiar un componente.</td></tr>
+<tr><td><b>Vida útil</b></td><td>Horas que se espera que dure un componente antes del cambio programado.</td></tr>
+<tr><td><b>Backlog</b></td><td>Trabajo pendiente acumulado.</td></tr>
+<tr><td><b>MTBF</b></td><td>Mean Time Between Failures. Horas promedio entre fallas.</td></tr>
+<tr><td><b>MTTR</b></td><td>Mean Time To Repair. Horas promedio de reparación.</td></tr>
+<tr><td><b>Disponibilidad física</b></td><td>% del tiempo que el equipo está apto para operar.</td></tr>
+<tr><td><b>Plan rolling</b></td><td>Plan que se actualiza en ciclos móviles: cada mes se agrega uno nuevo al horizonte.</td></tr>
+<tr><td><b>Desviación</b></td><td>Diferencia entre presupuesto y gasto real. El corazón del control presupuestario.</td></tr>
+<tr><td><b>FY</b></td><td>Fiscal Year. En Komatsu parte en abril.</td></tr>
+<tr><td><b>OS</b></td><td>Orden de Servicio. El documento que identifica un trabajo.</td></tr>
+<tr><td><b>ESAP</b></td><td>Código del sistema SAP asociado al componente o al movimiento.</td></tr>
+</table>
+
+<div class="caja">
+  <span class="tag">Fórmula útil en entrevista</span>
+  <p>La fecha estimada de cambio de un componente:</p>
+  <pre style="margin-top:10px"><code>fecha_cambio = hoy + (vida_util − horómetro_actual) / horas_por_día</code></pre>
+  <p>Y el dimensionamiento de pool por ley de Little:</p>
+  <pre style="margin-top:10px"><code>pool = tasa_de_cambios_por_día × TAT_en_días</code></pre>
+  <p>Con esas dos armas la mayor parte de un caso de planificación de componentes.</p>
+</div>
+
+<hr>
+
+<!-- ============ 12 ============ -->
+<h2 id="c12"><span class="num">Capítulo doce</span>Checklist para una prueba técnica</h2>
+
+<h3>Antes de calcular nada</h3>
+
+<ul>
+<li>Abrir cada archivo y mirar qué trae. Cuántas filas, qué columnas, qué se ve raro.</li>
+<li>Activar Calidad y Distribución de columna en Power Query.</li>
+<li>Anotar los problemas encontrados: valores faltantes, duplicados, tipos mal
+asignados, valores imposibles.</li>
+<li>Identificar cuál es la tabla de hechos y cuáles las dimensiones.</li>
+</ul>
+
+<h3>Durante</h3>
+
+<ul>
+<li>Limpiar llaves con Trim y Upper en <b>todas</b> las tablas antes de relacionar.</li>
+<li>Verificar tipo de dato de cada columna que vayas a usar en un cálculo.</li>
+<li>Después de cada medida, comprobar que la cinta diga "Herramientas de medidas".</li>
+<li>Poner nombres en español y con unidades: "TAT promedio (días)", no "Promedio_TAT".</li>
+<li>Dar formato a cada medida ni bien la creas.</li>
+</ul>
+
+<h3>Antes de entregar</h3>
+
+<ul>
+<li>Revisar que los totales tengan sentido de magnitud. Divide el total por el
+número de registros y pregúntate si ese promedio es creíble.</li>
+<li>Que ningún visual muestre error ni "(en blanco)" inesperado.</li>
+<li>Que los filtros funcionen sobre todos los visuales.</li>
+<li>Alinear todo.</li>
+<li>Preparar dos o tres frases con los <b>hallazgos</b>.</li>
+</ul>
+
+<div class="caja ok">
+  <span class="tag">Lo que realmente evalúan</span>
+  <p>La fórmula se busca en Google en treinta segundos. Lo que no se busca es darse
+  cuenta de que hay tres registros con días negativos, que la media del horómetro
+  está sesgada por outliers, o que el TAT bajó de 13 a 10 días entre 2020 y 2025.</p>
+  <p>Ejecutar es la mitad. La otra mitad es <b>mirar</b> el resultado y tener algo
+  que decir sobre él.</p>
+</div>
+
+<h3>Los hallazgos de esta prueba</h3>
+
+<table>
+<tr><th style="width:36%">Hallazgo</th><th>Cómo contarlo</th></tr>
+<tr><td>TAT bajó de 13 a 9-10 días entre 2020 y 2025</td><td>Mejora sostenida de casi 25%, con el mayor salto entre 2020 y 2021</td></tr>
+<tr><td>Media del horómetro 18.044 vs mediana 14.722</td><td>Distribución sesgada. Hay outliers, uno de 298.884 horas que es imposible</td></tr>
+<tr><td>3 registros con días negativos</td><td>Errores de digitación: ingreso anterior al desmontaje</td></tr>
+<tr><td>196 registros con TAT de 0 días</td><td>Vale preguntar si es real o si es un valor por defecto del sistema</td></tr>
+<tr><td>Solo 4 países con movimientos</td><td>El resto del catálogo está sin uso</td></tr>
+<tr><td>6 OS_KCH duplicados en Costos</td><td>Compromete la relación uno a muchos y puede inflar el total</td></tr>
+<tr><td>Componentes que desaparecen de la matriz después de 2022</td><td>¿Dejaron de usarse o hay huecos en el registro?</td></tr>
+</table>
+
+<h3>Preguntas que puedes hacer tú</h3>
+
+<p>En una entrevista técnica, preguntar bien vale tanto como responder. Tres que
+funcionan:</p>
+
+<ul>
+<li>"¿El TAT objetivo está definido por componente o es un solo número para todos?"</li>
+<li>"¿El pool de componentes se dimensiona con alguna regla formal o por
+experiencia?"</li>
+<li>"Cuando hay desviación de presupuesto, ¿quién la explica y con qué frecuencia se
+revisa?"</li>
+</ul>
+
+<div class="pie">
+  <p><b>Guía de terreno · Power BI</b><br>
+  Construida sobre el caso de desmontaje y reparación de componentes.
+  Archivos: TAT_LOGISTICO, Costos, Países, Fábrica.<br>
+  Tipo de cambio de referencia usado en los ejercicios: 1 USD = 926 CLP · 1 EUR = 1.059 CLP.</p>
+</div>
+
+</div>
+</body>
+</html>

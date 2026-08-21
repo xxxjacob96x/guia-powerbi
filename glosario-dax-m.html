@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAX vs M — Glosario comparativo</title>
+<style>
+:root{
+  --papel:#F7F8FA;
+  --tinta:#14181F;
+  --azul:#0A2A5E;
+  --azul-claro:#1B5E9E;
+  --amarillo:#F0B323;
+  --acero:#6B7684;
+  --linea:#DCE3EC;
+  --ok:#1B7F5A;
+  --error:#C0392B;
+  --code-bg:#151A22;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--papel); color:var(--tinta);
+  font-family:"Segoe UI",Calibri,system-ui,sans-serif;
+  font-size:16.5px; line-height:1.65;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 24px 120px}
+
+/* Portada */
+.portada{
+  background:var(--azul); color:#fff; margin-bottom:0;
+  padding:64px 24px 56px;
+}
+.portada .inner{max-width:860px;margin:0 auto}
+.eyebrow{
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--amarillo);font-weight:700;margin:0 0 14px
+}
+.portada h1{
+  font-family:Cambria,Georgia,serif;
+  font-size:46px;line-height:1.1;margin:0 0 14px;font-weight:700
+}
+.portada p{margin:0;color:#B9CBE4;font-size:17px;max-width:56ch}
+.portada .meta{
+  margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.2);
+  font-size:13.5px;color:#8FA9CC
+}
+
+/* Secciones */
+h2{
+  font-family:Cambria,Georgia,serif;
+  font-size:30px;margin:64px 0 6px;line-height:1.2;
+  scroll-margin-top:20px;
+}
+h2 .num{
+  display:block;font-family:"Segoe UI",sans-serif;font-size:12px;
+  letter-spacing:.16em;color:var(--azul-claro);font-weight:700;
+  text-transform:uppercase;margin-bottom:6px
+}
+h3{font-size:20px;margin:38px 0 8px;font-family:Cambria,Georgia,serif}
+h4{font-size:16px;margin:26px 0 6px;color:var(--azul)}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:6px}
+a{color:var(--azul-claro)}
+
+/* Índice */
+.toc{
+  background:#fff;border:1px solid var(--linea);border-radius:6px;
+  padding:26px 30px;margin:36px 0 10px
+}
+.toc h3{margin:0 0 14px;font-size:15px;letter-spacing:.1em;
+  text-transform:uppercase;font-family:"Segoe UI",sans-serif;color:var(--acero)}
+.toc ol{list-style:none;padding:0;margin:0;counter-reset:t}
+.toc li{counter-increment:t;margin:0;border-bottom:1px solid var(--linea)}
+.toc li:last-child{border-bottom:none}
+.toc a{
+  display:flex;gap:14px;padding:9px 0;text-decoration:none;color:var(--tinta)
+}
+.toc a:hover{color:var(--azul-claro)}
+.toc a::before{
+  content:counter(t,decimal-leading-zero);
+  color:var(--azul-claro);font-weight:700;font-size:13px;
+  font-variant-numeric:tabular-nums;padding-top:3px;
+  margin-right:14px;min-width:22px;display:inline-block
+}
+
+/* Código */
+pre{
+  background:var(--code-bg);color:#E6EDF3;border-radius:6px;
+  padding:16px 18px;overflow-x:auto;font-size:13.5px;line-height:1.55;
+  margin:0 0 16px;font-family:Consolas,"Courier New",monospace
+}
+pre .c{color:#7D8799}          /* comentario */
+pre .k{color:#F0B323}          /* palabra clave */
+pre .s{color:#7EE787}          /* string */
+pre .f{color:#79C0FF}          /* función */
+code{
+  background:#E7ECF3;padding:1.5px 5px;border-radius:3px;
+  font-family:Consolas,"Courier New",monospace;font-size:.88em
+}
+pre code{background:none;padding:0;font-size:inherit}
+
+/* Cajas */
+.caja{
+  border-left:3px solid var(--azul-claro);background:#fff;
+  padding:16px 20px;margin:0 0 18px;border-radius:0 5px 5px 0;
+  border-top:1px solid var(--linea);border-right:1px solid var(--linea);
+  border-bottom:1px solid var(--linea)
+}
+.caja .tag{
+  display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:700;color:var(--azul-claro);margin-bottom:6px
+}
+.caja p:last-child{margin-bottom:0}
+.caja.err{border-left-color:var(--error)}
+.caja.err .tag{color:var(--error)}
+.caja.ok{border-left-color:var(--ok)}
+.caja.ok .tag{color:var(--ok)}
+.caja.regla{border-left-color:var(--amarillo);background:#FFFBF0}
+.caja.regla .tag{color:#A87708}
+
+/* Tablas */
+table{
+  width:100%;border-collapse:collapse;margin:0 0 20px;
+  font-size:14.5px;background:#fff
+}
+th{
+  background:var(--azul);color:#fff;text-align:left;padding:9px 12px;
+  font-weight:600;font-size:13px;letter-spacing:.03em
+}
+td{padding:9px 12px;border-bottom:1px solid var(--linea);vertical-align:top}
+tr:last-child td{border-bottom:none}
+table code{font-size:.85em}
+
+/* Pasos numerados */
+.pasos{counter-reset:p;list-style:none;padding:0}
+.pasos li{
+  counter-increment:p;position:relative;padding-left:42px;margin-bottom:14px
+}
+.pasos li::before{
+  content:counter(p);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border-radius:50%;background:var(--azul);
+  color:#fff;font-size:13px;font-weight:700;display:flex;
+  align-items:center;justify-content:center
+}
+hr{border:none;border-top:1px solid var(--linea);margin:44px 0}
+.pie{
+  margin-top:70px;padding-top:20px;border-top:2px solid var(--azul);
+  font-size:13px;color:var(--acero)
+}
+@media print{
+  .portada{padding:40px 0}
+  h2{page-break-after:avoid;page-break-before:always}
+  h2#c1{page-break-before:avoid}
+  h3,h4{page-break-after:avoid}
+  pre,table,.caja,.pasos li{page-break-inside:avoid}
+  hr{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="portada">
+  <div class="inner">
+    <p class="eyebrow">Guía de terreno · Jacob Chaparro</p>
+    <h1>DAX y M,<br>lado a lado</h1>
+    <p>El glosario de referencia rápida para no dudar entre Power Query y DAX: qué
+       hace cada uno, cuándo se calcula, y las funciones equivalentes una al lado
+       de la otra.</p>
+    <p class="meta">Complementa la guía completa · TAT_LOGISTICO · Costos · Países · Fábrica</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="toc">
+  <h3>Contenido</h3>
+  <ol>
+    <li><a href="#c1">La diferencia de fondo</a></li>
+    <li><a href="#c2">Sintaxis básica comparada</a></li>
+    <li><a href="#c3">Funciones de texto</a></li>
+    <li><a href="#c4">Funciones de fecha</a></li>
+    <li><a href="#c5">Condicionales, lado a lado</a></li>
+    <li><a href="#c6">Números y agregación</a></li>
+    <li><a href="#c7">Lo que no tiene equivalente</a></li>
+    <li><a href="#c8">Cuándo uso cada uno</a></li>
+  </ol>
+</div>
+
+<p style="font-size:14.5px;color:var(--acero)">
+Esta página se consulta por índice, no en orden. Sirve para resolver el "¿esto va
+en M o en DAX?" en el momento, sin tener que releer la guía completa.</p>
+
+<hr>
+
+<!-- ============ 1 ============ -->
+<h2 id="c1"><span class="num">Uno</span>La diferencia de fondo</h2>
+
+<p>Antes de cualquier función: de aquí sale el criterio para decidir si algo va en
+M o en DAX.</p>
+
+<table>
+<tr><th style="width:22%"></th><th style="width:39%">M · Power Query</th><th>DAX</th></tr>
+<tr><td>Dónde vive</td><td>Editor de Power Query (Inicio → Transformar datos)</td><td>Vista de Datos (columnas) o vista de Informe (medidas)</td></tr>
+<tr><td>Cuándo se calcula</td><td>Al cargar/actualizar los datos — una sola vez por refresh</td><td>Columnas: al refresh, igual que M. Medidas: cada vez que interactúas con un visual</td></tr>
+<tr><td>Para qué sirve</td><td>Limpiar, transformar y dar forma a los datos antes de que entren al modelo</td><td>Calcular y analizar datos dentro del modelo ya cargado</td></tr>
+<tr><td>Cambia la estructura</td><td>Sí — agregar/quitar columnas y filas, combinar tablas, cambiar tipos</td><td>No — trabaja sobre la tabla tal como está en el modelo</td></tr>
+<tr><td>Ejemplo típico</td><td>Corregir un typo, convertir texto a número, separar una columna</td><td>Calcular un total, un promedio, un % de crecimiento</td></tr>
+</table>
+
+<div class="caja regla">
+  <span class="tag">Regla</span>
+  <p>Si la pregunta es "¿cómo dejo el dato bien antes de que se cargue?", es M. Si
+  es "¿cómo calculo/comparo/resumo algo con los datos ya cargados?", es DAX.</p>
+</div>
+
+<hr>
+
+<!-- ============ 2 ============ -->
+<h2 id="c2"><span class="num">Dos</span>Sintaxis básica comparada</h2>
+
+<table>
+<tr><th style="width:26%">Elemento</th><th style="width:37%">M</th><th>DAX</th></tr>
+<tr><td>Referencia a columna</td><td><code>[NombreColumna]</code></td><td><code>Tabla[NombreColumna]</code></td></tr>
+<tr><td>Condicional</td><td><code>if cond then A else B</code></td><td><code>IF ( cond, A, B )</code></td></tr>
+<tr><td>Múltiples casos</td><td><code>if…then…else if…then…else</code> (anidado)</td><td><code>SWITCH ( expr, c1, r1, …, def )</code></td></tr>
+<tr><td>Distinto de</td><td><code>&lt;&gt;</code></td><td><code>&lt;&gt;</code></td></tr>
+<tr><td>Concatenar texto</td><td><code>&amp;</code></td><td><code>&amp;</code></td></tr>
+<tr><td>Variable temporal</td><td><code>let paso = … in paso</code></td><td><code>VAR n = … RETURN …</code></td></tr>
+<tr><td>Vacío / nulo</td><td><code>null</code></td><td><code>BLANK()</code></td></tr>
+</table>
+
+<hr>
+
+<!-- ============ 3 ============ -->
+<h2 id="c3"><span class="num">Tres</span>Funciones de texto</h2>
+
+<table>
+<tr><th style="width:26%">Quiero hacer esto</th><th style="width:37%">M</th><th>DAX</th></tr>
+<tr><td>Quitar caracteres</td><td><code>Text.Remove(t, "$")</code></td><td><code>SUBSTITUTE(t, "$", "")</code></td></tr>
+<tr><td>Reemplazar valor</td><td><code>Table.ReplaceValue(…)</code></td><td><code>SUBSTITUTE(Tabla[Col], "v", "n")</code></td></tr>
+<tr><td>Texto → número</td><td><code>Number.From(t)</code></td><td><code>VALUE(t)</code></td></tr>
+<tr><td>Número → texto</td><td><code>Text.From(n)</code></td><td><code>FORMAT(n, "fmt")</code> o <code>&amp;</code></td></tr>
+<tr><td>Mayúscula inicial</td><td><code>Text.Proper(t)</code></td><td><code>PROPER(t)</code></td></tr>
+<tr><td>Quitar espacios</td><td><code>Text.Trim(t)</code></td><td><code>TRIM(t)</code></td></tr>
+<tr><td>Extraer parte</td><td><code>Text.Start / Text.Range</code></td><td><code>LEFT / MID</code></td></tr>
+</table>
+
+<hr>
+
+<!-- ============ 4 ============ -->
+<h2 id="c4"><span class="num">Cuatro</span>Funciones de fecha</h2>
+
+<table>
+<tr><th style="width:26%">Quiero hacer esto</th><th style="width:37%">M</th><th>DAX</th></tr>
+<tr><td>Sacar el año</td><td><code>Date.Year([F])</code></td><td><code>YEAR(Tabla[F])</code></td></tr>
+<tr><td>Sacar el mes</td><td><code>Date.Month([F])</code></td><td><code>MONTH(Tabla[F])</code></td></tr>
+<tr><td>Fecha de hoy</td><td><code>DateTime.LocalNow()</code></td><td><code>TODAY()</code></td></tr>
+<tr><td>Restar dos fechas → días</td><td><code>Duration.Days([A]-[B])</code></td><td><code>Tabla[A] - Tabla[B]</code></td></tr>
+<tr><td>Mes / año anterior</td><td>manual, más laborioso</td><td><code>DATEADD / PREVIOUSMONTH</code></td></tr>
+</table>
+
+<div class="caja err">
+  <span class="tag">El gotcha clásico</span>
+  <p>En M, restar fechas da un <em>duration</em> — hay que envolver con
+  <code>Duration.Days</code>. En DAX, restar fechas da directo un número. Es al
+  revés de lo intuitivo, fácil de olvidar en cualquiera de los dos sentidos.</p>
+</div>
+
+<hr>
+
+<!-- ============ 5 ============ -->
+<h2 id="c5"><span class="num">Cinco</span>Condicionales, lado a lado</h2>
+
+<p>Mismo resultado, dos sintaxis distintas — este es el que más confunde al
+cambiar de un lenguaje al otro.</p>
+
+<pre><code><span class="c">// M</span>
+<span class="k">if</span> [Codigo_pais] = <span class="s">"Q32"</span> <span class="k">then</span> <span class="s">"Chile"</span> <span class="k">else</span> <span class="s">"Otro"</span></code></pre>
+
+<pre><code><span class="c">// DAX</span>
+<span class="f">IF</span> ( Tabla[Codigo_pais] = <span class="s">"Q32"</span>, <span class="s">"Chile"</span>, <span class="s">"Otro"</span> )</code></pre>
+
+<table>
+<tr><th style="width:26%">Quiero hacer esto</th><th style="width:37%">M</th><th>DAX</th></tr>
+<tr><td>¿Está vacío?</td><td><code>[Col] = null</code></td><td><code>ISBLANK(Tabla[Col])</code></td></tr>
+<tr><td>Y / O lógico</td><td><code>and / or</code></td><td><code>&amp;&amp; / ||</code></td></tr>
+</table>
+
+<hr>
+
+<!-- ============ 6 ============ -->
+<h2 id="c6"><span class="num">Seis</span>Números y agregación</h2>
+
+<table>
+<tr><th style="width:26%">Quiero hacer esto</th><th style="width:37%">M</th><th>DAX</th></tr>
+<tr><td>Sumar una columna</td><td>agrupando (<code>Table.Group</code>)</td><td><code>SUM(Tabla[Col])</code></td></tr>
+<tr><td>Sumar cantidad × precio</td><td>columna calculada + suma</td><td><code>SUMX(Tabla, [Cant]*[Precio])</code></td></tr>
+<tr><td>Contar valores distintos</td><td><code>Table.Distinct</code> + contar</td><td><code>DISTINCTCOUNT(Tabla[Col])</code></td></tr>
+<tr><td>División segura</td><td><code>try [A]/[B] otherwise null</code></td><td><code>DIVIDE(A, B)</code></td></tr>
+<tr><td>Redondear</td><td><code>Number.Round(n, d)</code></td><td><code>ROUND(n, d)</code></td></tr>
+</table>
+
+<hr>
+
+<!-- ============ 7 ============ -->
+<h2 id="c7"><span class="num">Siete</span>Lo que no tiene equivalente</h2>
+
+<h3>Solo existe en M</h3>
+
+<table>
+<tr><th style="width:30%">Función</th><th>Para qué sirve</th></tr>
+<tr><td><code>Table.AddColumn</code></td><td>Agrega una columna nueva a la tabla — lo que hace "Columna personalizada" por detrás.</td></tr>
+<tr><td><code>Table.ReplaceValue</code></td><td>Reemplaza un valor por otro en una o más columnas.</td></tr>
+<tr><td><code>Table.TransformColumns</code></td><td>Aplica una función a todos los valores de una columna.</td></tr>
+<tr><td><code>Table.Group</code></td><td>Agrupa filas y agrega — como una dinámica hecha en el editor.</td></tr>
+<tr><td><code>#"Paso anterior"</code></td><td>Cada paso queda guardado con nombre; el siguiente referencia al anterior así.</td></tr>
+</table>
+
+<h3>Solo existe en DAX</h3>
+
+<table>
+<tr><th style="width:30%">Función / concepto</th><th>Para qué sirve</th></tr>
+<tr><td><code>RELATED()</code></td><td>Trae un valor desde una tabla relacionada, del lado "muchos" hacia el "uno".</td></tr>
+<tr><td><code>CALCULATE()</code></td><td>La función más importante — recalcula cambiando el contexto de filtro.</td></tr>
+<tr><td><code>RANKX()</code></td><td>Calcula el ranking de un valor dentro de una tabla.</td></tr>
+<tr><td>Medida vs columna</td><td>Columna: se fija al refresh. Medida: se recalcula según lo que ves en el visual.</td></tr>
+<tr><td>Contexto de fila / filtro</td><td>Una fórmula "sabe" en qué fila está o qué filtros hay activos — exclusivo de DAX.</td></tr>
+</table>
+
+<hr>
+
+<!-- ============ 8 ============ -->
+<h2 id="c8"><span class="num">Ocho</span>Cuándo uso cada uno</h2>
+
+<table>
+<tr><th style="width:70%">Situación</th><th>Usa</th></tr>
+<tr><td>Un dato viene mal escrito o en el tipo incorrecto</td><td>M</td></tr>
+<tr><td>Necesito separar o combinar columnas de origen</td><td>M</td></tr>
+<tr><td>Necesito una columna que dependa de otra tabla relacionada</td><td>DAX · <code>RELATED</code></td></tr>
+<tr><td>Necesito un total, promedio o ranking que reaccione a los filtros</td><td>DAX · medida</td></tr>
+<tr><td>Necesito una columna fija que no cambie con los filtros</td><td>M o DAX, cualquiera</td></tr>
+<tr><td>Necesito comparar contra el mes o año anterior</td><td>DAX · time intelligence</td></tr>
+<tr><td>Necesito cargar datos desde un archivo, carpeta o base de datos</td><td>M</td></tr>
+</table>
+
+<div class="caja ok">
+  <span class="tag">Para profundizar</span>
+  <p>Este glosario es de referencia rápida. Para el detalle completo — errores
+  reales, figuras del modelo, catálogo extendido de funciones — está la guía
+  completa en la página principal de este repositorio.</p>
+</div>
+
+<p class="pie">Glosario de referencia rápida — Power BI / DAX / M. Jacob Chaparro Soto.</p>
+
+</div>
+</body>
+</html>
